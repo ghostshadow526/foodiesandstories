@@ -42,3 +42,14 @@ export type User = {
     role: 'customer' | 'admin';
     avatarId: string;
 };
+
+export type Article = {
+    id: string;
+    slug: string;
+    title: string;
+    excerpt: string;
+    imageUrl: string;
+    imageHint: string;
+    author: string;
+    publishedAt: string;
+};

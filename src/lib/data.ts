@@ -1,4 +1,4 @@
-import type { Product, User, Order } from './types';
+import type { Product, User, Order, Article } from './types';
 
 export const mockProducts: Product[] = [
   {
@@ -142,4 +142,67 @@ export const mockOrders: Order[] = [
         status: 'Processing',
         createdAt: new Date('2023-10-28T11:00:00Z'),
     }
+];
+
+export const mockArticles: Article[] = [
+  {
+    id: 'article-1',
+    slug: 'the-enduring-power-of-classic-literature',
+    title: 'The Enduring Power of Classic Literature',
+    excerpt: 'Discover why the classics remain relevant and powerful in our modern world, and how they continue to shape our understanding of ourselves and society.',
+    imageUrl: 'https://picsum.photos/seed/journal1/600/400',
+    imageHint: 'reading writer',
+    author: 'Jane Austen',
+    publishedAt: 'October 15, 2023',
+  },
+  {
+    id: 'article-2',
+    slug: 'an-interview-with-a-modern-wordsmith',
+    title: 'An Interview with a Modern Wordsmith',
+    excerpt: 'We sit down with a bestselling author to discuss their creative process, the challenges of modern storytelling, and their advice for aspiring writers.',
+    imageUrl: 'https://picsum.photos/seed/journal2/600/400',
+    imageHint: 'author interview',
+    author: 'Leo Tolstoy',
+    publishedAt: 'October 10, 2023',
+  },
+  {
+    id: 'article-3',
+    slug: 'creating-the-perfect-reading-nook',
+    title: 'Creating the Perfect Reading Nook',
+    excerpt: 'Tips and tricks for designing a cozy and inviting space in your home that encourages you to get lost in the pages of a good book.',
+    imageUrl: 'https://picsum.photos/seed/journal3/600/400',
+    imageHint: 'cozy library',
+    author: 'Virginia Woolf',
+    publishedAt: 'October 5, 2023',
+  },
+   {
+    id: 'article-4',
+    slug: 'the-art-of-the-book-cover',
+    title: 'The Art of the Book Cover',
+    excerpt: 'A deep dive into the design and psychology of book covers. How do they influence our reading choices? What makes a cover iconic?',
+    imageUrl: 'https://picsum.photos/seed/journal4/600/400',
+    imageHint: 'book cover design',
+    author: 'Jorge Luis Borges',
+    publishedAt: 'September 28, 2023',
+  },
+   {
+    id: 'article-5',
+    slug: 'literary-tourism-walking-in-the-footsteps-of-giants',
+    title: 'Literary Tourism: Walking in the Footsteps of Giants',
+    excerpt: 'Explore famous literary landmarks around the world, from Shakespeare\'s Globe to Hemingway\'s Havana. A travel guide for the bookish soul.',
+    imageUrl: 'https://picsum.photos/seed/journal5/600/400',
+    imageHint: 'historic library',
+    author: 'Italo Calvino',
+    publishedAt: 'September 21, 2023',
+  },
+   {
+    id: 'article-6',
+    slug: 'the-evolution-of-the-novel',
+    title: 'The Evolution of the Novel',
+    excerpt: 'Trace the history of the novel from its earliest forms to the contemporary experimental narratives of today. A journey through literary history.',
+    imageUrl: 'https://picsum.photos/seed/journal6/600/400',
+    imageHint: 'old books',
+    author: 'Umberto Eco',
+    publishedAt: 'September 14, 2023',
+  },
 ];

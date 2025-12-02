@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { mockProducts } from '@/lib/data';
+import { mockProducts, mockArticles } from '@/lib/data';
 import ProductCard from '@/components/shared/product-card';
 import {
   Carousel,
@@ -14,14 +14,17 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"
 import { Card, CardContent } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
+import { ArrowRight } from 'lucide-react';
 
 export default function Home() {
   const heroImage = PlaceHolderImages.find((img) => img.id === 'hero-1');
   const featuredProducts = mockProducts.slice(0, 4);
   const newArrivals = mockProducts.slice(4, 8);
+  const journalEntries = mockArticles.slice(0,3);
 
   return (
-    <div className="flex flex-col gap-16 md:gap-24">
+    <div className="flex flex-col gap-16 md:gap-24 overflow-x-hidden">
       <section className="relative h-[70vh] w-full">
         {heroImage && (
           <Image
@@ -41,18 +44,18 @@ export default function Home() {
           <p className="mt-4 max-w-2xl text-lg md:text-xl text-primary-foreground/90 animate-fade-in-up [animation-delay:200ms]">
             Discover a curated collection of timeless books and insightful articles. Your journey into literary excellence begins here.
           </p>
-          <Button asChild size="lg" className="mt-8 animate-fade-in-up [animation-delay:400ms]" variant="outline">
+          <Button asChild size="lg" className="mt-8 animate-fade-in-up [animation-delay:400ms]">
             <Link href="/products">Explore Collection</Link>
           </Button>
         </div>
       </section>
 
       <section className="container mx-auto px-4">
-        <div className="text-center">
+        <div className="text-center animate-fade-in-up">
           <h2 className="font-headline text-3xl md:text-4xl font-bold">New Arrivals</h2>
           <p className="mt-2 text-lg text-muted-foreground">Freshly added to our exclusive collection.</p>
         </div>
-        <div className="mt-8">
+        <div className="mt-8 animate-fade-in-up [animation-delay:200ms]">
             <Carousel
               opts={{
                 align: "start",
@@ -76,72 +79,94 @@ export default function Home() {
       </section>
 
       <section className="container mx-auto px-4">
-        <div className="text-center">
+        <div className="text-center animate-fade-in-up">
           <h2 className="font-headline text-3xl md:text-4xl font-bold">Featured Books</h2>
           <p className="mt-2 text-lg text-muted-foreground">Handpicked selections for the discerning reader.</p>
         </div>
-        <div className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          {featuredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+        <div className="mt-12 space-y-24">
+          {featuredProducts.map((product, index) => {
+             const image = PlaceHolderImages.find((img) => img.id === product.imageId);
+             const isOdd = index % 2 !== 0;
+            return (
+              <div key={product.id} className="grid md:grid-cols-2 gap-12 items-center animate-fade-in-up">
+                <div className={cn("relative aspect-[2/3] w-full max-w-sm mx-auto shadow-xl rounded-lg overflow-hidden transition-transform duration-500 hover:scale-105", isOdd && "md:order-last")}>
+                    {image && (
+                      <Link href={`/products/${product.slug}`}>
+                        <Image
+                        src={image.imageUrl}
+                        alt={product.name}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                        data-ai-hint={image.imageHint}
+                        />
+                      </Link>
+                    )}
+                </div>
+                <div className={cn("text-center md:text-left", isOdd && "md:text-right")}>
+                  <p className="text-accent font-semibold">{product.category}</p>
+                  <h3 className="font-headline text-3xl font-bold mt-2">{product.name}</h3>
+                  <p className="mt-4 text-muted-foreground text-lg">by {product.author}</p>
+                  <p className="mt-4 text-lg line-clamp-3">{product.description}</p>
+                   <Button asChild size="lg" className="mt-8">
+                      <Link href={`/products/${product.slug}`}>
+                        View Book <ArrowRight className="ml-2"/>
+                      </Link>
+                  </Button>
+                </div>
+              </div>
+            )
+          })}
         </div>
-        <div className="text-center mt-12">
-            <Button asChild size="lg" variant="outline">
+        <div className="text-center mt-20 animate-fade-in-up">
+            <Button asChild size="lg">
                 <Link href="/products">View All Books</Link>
             </Button>
         </div>
       </section>
 
       <section className="bg-transparent py-20">
-        <div className="container mx-auto px-4 text-center">
+        <div className="container mx-auto px-4 text-center animate-fade-in-up">
             <h2 className="font-headline text-3xl md:text-4xl font-bold">Why Choose Prestige Pages?</h2>
-            <div className="mt-8 grid max-w-4xl mx-auto grid-cols-1 md:grid-cols-3 gap-8 text-left">
-                <div className="p-6 rounded-lg transition-transform hover:scale-105">
+            <div className="mt-8 grid max-w-5xl mx-auto grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <Card className="p-6 transition-transform hover:scale-105 hover:shadow-xl">
                     <h3 className="font-headline text-xl font-semibold">Expert Curation</h3>
                     <p className="mt-2 text-muted-foreground">Each book and article is selected by our team of literary experts to ensure the highest quality.</p>
-                </div>
-                <div className="p-6 rounded-lg transition-transform hover:scale-105">
+                </Card>
+                <Card className="p-6 transition-transform hover:scale-105 hover:shadow-xl">
                     <h3 className="font-headline text-xl font-semibold">Exclusive Content</h3>
                     <p className="mt-2 text-muted-foreground">Access a library of exclusive content you won't find anywhere else.</p>
-                </div>
-                <div className="p-6 rounded-lg transition-transform hover:scale-105">
+                </Card>
+                <Card className="p-6 transition-transform hover:scale-105 hover:shadow-xl">
                     <h3 className="font-headline text-xl font-semibold">Seamless Experience</h3>
                     <p className="mt-2 text-muted-foreground">From browsing to purchase, enjoy a smooth, elegant, and secure user experience.</p>
-                </div>
+                </Card>
             </div>
         </div>
       </section>
 
        <section className="container mx-auto px-4 mb-16 md:mb-24">
-        <div className="text-center">
+        <div className="text-center animate-fade-in-up">
           <h2 className="font-headline text-3xl md:text-4xl font-bold">From Our Journal</h2>
           <p className="mt-2 text-lg text-muted-foreground">Insights, interviews, and inspiration for the literary mind.</p>
         </div>
         <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-3">
-          <Card className="overflow-hidden transition-shadow hover:shadow-lg">
-            <Image src="https://picsum.photos/seed/journal1/600/400" alt="Journal Entry 1" width={600} height={400} className="object-cover" data-ai-hint="reading writer" />
-            <CardContent className="p-6">
-              <h3 className="font-headline text-xl font-semibold mb-2">The Enduring Power of Classic Literature</h3>
-              <p className="text-muted-foreground mb-4">Discover why the classics remain relevant and powerful in our modern world.</p>
-              <Button variant="link" asChild><Link href="#">Read More</Link></Button>
-            </CardContent>
-          </Card>
-           <Card className="overflow-hidden transition-shadow hover:shadow-lg">
-            <Image src="https://picsum.photos/seed/journal2/600/400" alt="Journal Entry 2" width={600} height={400} className="object-cover" data-ai-hint="author interview" />
-            <CardContent className="p-6">
-              <h3 className="font-headline text-xl font-semibold mb-2">An Interview with a Modern Wordsmith</h3>
-              <p className="text-muted-foreground mb-4">We sit down with a bestselling author to discuss their creative process.</p>
-               <Button variant="link" asChild><Link href="#">Read More</Link></Button>
-            </CardContent>
-          </Card>
-           <Card className="overflow-hidden transition-shadow hover:shadow-lg">
-            <Image src="https://picsum.photos/seed/journal3/600/400" alt="Journal Entry 3" width={600} height={400} className="object-cover" data-ai-hint="cozy library" />
-            <CardContent className="p-6">
-              <h3 className="font-headline text-xl font-semibold mb-2">Creating the Perfect Reading Nook</h3>
-              <p className="text-muted-foreground mb-4">Tips and tricks for designing a space that invites you to get lost in a book.</p>
-              <Button variant="link" asChild><Link href="#">Read More</Link></Button>
-            </CardContent>
-          </Card>
+          {journalEntries.map((article, index) => (
+             <Card key={article.id} className="overflow-hidden transition-shadow hover:shadow-xl animate-fade-in-up" style={{animationDelay: `${index * 200}ms`}}>
+                <Link href={`/articles/${article.slug}`}>
+                    <div className="aspect-video relative">
+                        <Image src={article.imageUrl} alt={article.title} fill className="object-cover" data-ai-hint={article.imageHint} />
+                    </div>
+                </Link>
+                <CardContent className="p-6">
+                    <h3 className="font-headline text-xl font-semibold mb-2 leading-tight">
+                        <Link href={`/articles/${article.slug}`} className="hover:text-primary">{article.title}</Link>
+                    </h3>
+                    <p className="text-muted-foreground mb-4 line-clamp-2">{article.excerpt}</p>
+                    <Button variant="link" asChild><Link href={`/articles/${article.slug}`}>Read More</Link></Button>
+                </CardContent>
+            </Card>
+          ))}
         </div>
       </section>
     </div>

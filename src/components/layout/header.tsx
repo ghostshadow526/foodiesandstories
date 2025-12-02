@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { BookOpen, ShoppingCart, User, Menu, X } from 'lucide-react';
+import { BookOpen, ShoppingCart, User, Menu, X, Newspaper } from 'lucide-react';
 import { useState } from 'react';
 
 import Logo from '@/components/shared/logo';
@@ -18,6 +18,7 @@ import {
 const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/products', label: 'Books' },
+  { href: '/articles', label: 'Articles' },
   { href: '/about', label: 'About' },
   { href: '/contact', label: 'Contact' },
 ];
@@ -43,7 +44,7 @@ export default function Header() {
   );
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b border-white/20 bg-white/10 backdrop-blur-md">
       <div className="container flex h-16 items-center">
         <div className="mr-4 hidden md:flex">
             <Logo />
@@ -57,9 +58,9 @@ export default function Header() {
                         <span className="sr-only">Toggle Menu</span>
                     </Button>
                 </SheetTrigger>
-                <SheetContent side="left" className="w-[300px]">
+                <SheetContent side="left" className="w-[300px] bg-background/80 backdrop-blur-md border-r border-white/20">
                   <div className="flex flex-col h-full">
-                    <div className="border-b p-4">
+                    <div className="border-b p-4 border-white/20">
                       <Logo />
                     </div>
                     <div className="p-4">
