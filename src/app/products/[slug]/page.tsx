@@ -12,9 +12,8 @@ import { Separator } from '@/components/ui/separator';
 import React from 'react';
 
 export default function ProductDetailPage({ params }: { params: { slug: string } }) {
-  const resolvedParams = React.use(Promise.resolve(params));
   const { addToCart } = useCart();
-  const product = mockProducts.find((p) => p.slug === resolvedParams.slug);
+  const product = mockProducts.find((p) => p.slug === params.slug);
 
   if (!product) {
     notFound();
