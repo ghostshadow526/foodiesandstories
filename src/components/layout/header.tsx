@@ -43,7 +43,7 @@ export default function Header() {
   );
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-white/20 bg-white/10 backdrop-blur-md">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center">
         <div className="mr-4 hidden md:flex">
             <Logo />
@@ -51,49 +51,44 @@ export default function Header() {
         
         <div className="md:hidden">
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-              <SheetTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <Menu className="h-6 w-6" />
-                  <span className="sr-only">Toggle Menu</span>
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="left" className="bg-white/10 backdrop-blur-md border-r-white/20">
-                <div className="p-4">
-                  <div className="mb-8">
-                    <Logo />
+                <SheetTrigger asChild>
+                    <Button variant="ghost" size="icon">
+                        <Menu />
+                        <span className="sr-only">Toggle Menu</span>
+                    </Button>
+                </SheetTrigger>
+                <SheetContent side="left" className="w-[300px]">
+                  <div className="flex flex-col h-full">
+                    <div className="border-b p-4">
+                      <Logo />
+                    </div>
+                    <div className="p-4">
+                      <NavLinks className="flex-col items-start gap-4" />
+                    </div>
                   </div>
-                  <NavLinks className="flex-col items-start gap-4" />
-                </div>
-              </SheetContent>
+                </SheetContent>
             </Sheet>
         </div>
 
-        <div className="flex flex-1 items-center justify-between space-x-2 md:justify-center">
-            <div className="hidden md:flex">
-                <NavLinks />
-            </div>
-            <div className="md:hidden flex-1 flex justify-center">
-                <Logo />
-            </div>
+        <div className="hidden md:flex flex-1 items-center justify-center">
+          <NavLinks />
         </div>
-        
-        <div className="flex items-center gap-2">
-          <Button asChild variant="ghost" size="icon">
+
+        <div className="flex flex-1 items-center justify-end gap-4">
+          <Button variant="ghost" size="icon" asChild>
             <Link href="/cart">
               <ShoppingCart className="h-5 w-5" />
               {cartItemCount > 0 && (
-                <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">
+                <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
                   {cartItemCount}
                 </span>
               )}
-              <span className="sr-only">Shopping Cart</span>
+              <span className="sr-only">Cart</span>
             </Link>
           </Button>
-          <Button asChild variant="ghost" size="icon">
-            <Link href="/account">
-              <User className="h-5 w-5" />
-              <span className="sr-only">Account</span>
-            </Link>
+          <Button variant="ghost" size="icon">
+            <User className="h-5 w-5" />
+            <span className="sr-only">Account</span>
           </Button>
         </div>
       </div>
