@@ -83,6 +83,11 @@
     @apply bg-background text-foreground;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background-image: linear-gradient(to top, #accbee 0%, #e7f0fd 100%);
+  }
+
+  .dark body {
+    background-image: linear-gradient(to right, #243949 0%, #517fa4 100%);
   }
 }
 

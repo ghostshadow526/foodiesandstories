@@ -33,7 +33,7 @@ export default function Home() {
             data-ai-hint={heroImage.imageHint}
           />
         )}
-        <div className="absolute inset-0 bg-black/50" />
+        <div className="absolute inset-0 bg-black/30" />
         <div className="relative z-10 flex h-full flex-col items-center justify-center text-center text-white p-4">
           <h1 className="font-headline text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight animate-fade-in-up">
             Prestige Pages
@@ -41,7 +41,7 @@ export default function Home() {
           <p className="mt-4 max-w-2xl text-lg md:text-xl text-primary-foreground/90 animate-fade-in-up [animation-delay:200ms]">
             Discover a curated collection of timeless books and insightful articles. Your journey into literary excellence begins here.
           </p>
-          <Button asChild size="lg" className="mt-8 border border-white/30 bg-white/20 text-white backdrop-blur-sm transition-colors hover:bg-white/30 animate-fade-in-up [animation-delay:400ms]">
+          <Button asChild size="lg" className="mt-8 animate-fade-in-up [animation-delay:400ms]" variant="outline">
             <Link href="/products">Explore Collection</Link>
           </Button>
         </div>
@@ -92,7 +92,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="bg-secondary py-20">
+      <section className="bg-transparent py-20">
         <div className="container mx-auto px-4 text-center">
             <h2 className="font-headline text-3xl md:text-4xl font-bold">Why Choose Prestige Pages?</h2>
             <div className="mt-8 grid max-w-4xl mx-auto grid-cols-1 md:grid-cols-3 gap-8 text-left">
@@ -147,5 +147,3 @@ export default function Home() {
     </div>
   );
 }
-
-    
