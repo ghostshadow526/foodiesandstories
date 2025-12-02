@@ -47,8 +47,13 @@ export default function CartPage() {
                           <Input
                             type="number"
                             min="1"
-                            value={item.quantity}
-                            onChange={(e) => updateQuantity(item.id, parseInt(e.target.value, 10))}
+                            value={item.quantity || 1}
+                            onChange={(e) => {
+                                const newQuantity = parseInt(e.target.value, 10);
+                                if (!isNaN(newQuantity)) {
+                                    updateQuantity(item.id, newQuantity);
+                                }
+                            }}
                             className="w-20 text-center"
                           />
                            <p className="w-24 text-right font-semibold">{formatCurrency(item.price * item.quantity)}</p>
