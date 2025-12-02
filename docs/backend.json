@@ -1,0 +1,27 @@
+{
+  "entities": {
+    "admin": {
+      "title": "Admin",
+      "description": "An administrative user.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "The user's unique ID."
+        }
+      },
+      "required": ["uid"]
+    }
+  },
+  "auth": {
+    "providers": ["email"]
+  },
+  "firestore": {
+    "/admins/{adminId}": {
+      "schema": {
+        "$ref": "#/backend/entities/admin"
+      },
+      "description": "Stores information about administrative users."
+    }
+  }
+}

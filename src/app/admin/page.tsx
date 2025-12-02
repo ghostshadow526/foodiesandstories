@@ -15,13 +15,34 @@ import { mockOrders, mockUsers } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { formatCurrency } from '@/lib/utils';
 import { DollarSign, ShoppingCart, Users } from 'lucide-react';
+import { useUser } from '@/firebase';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function AdminDashboardPage() {
+  const { user, loading } = useUser();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!loading && !user?.isAdmin) {
+      router.push('/admin/login');
+    }
+  }, [user, loading, router]);
+
+
   const totalRevenue = mockOrders.reduce((sum, order) => sum + order.total, 0);
   const totalOrders = mockOrders.length;
   const totalCustomers = mockUsers.filter(u => u.role === 'customer').length;
   const recentOrders = mockOrders.slice(0, 5);
   const recentCustomers = mockUsers.slice(0, 5);
+
+  if (loading || !user?.isAdmin) {
+    return (
+        <div className="flex justify-center items-center h-screen">
+            <div>Loading...</div>
+        </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 py-12">
