@@ -1,3 +1,82 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero-1",
+      "description": "A grand library with tall bookshelves and a comfortable reading chair.",
+      "imageUrl": "https://images.unsplash.com/photo-1730662078423-f67a66d2371a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxncmFuZCUyMGxpYnJhcnl8ZW58MHx8fHwxNzY0NjM2NjIzfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "grand library"
+    },
+    {
+      "id": "book-cover-1",
+      "description": "Elegant book cover with abstract design.",
+      "imageUrl": "https://images.unsplash.com/photo-1528459105426-b9548367069b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxib29rJTIwY292ZXJ8ZW58MHx8fHwxNzY0NTk1MTk0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "book cover"
+    },
+    {
+      "id": "book-cover-2",
+      "description": "Minimalist book cover with a single object.",
+      "imageUrl": "https://images.unsplash.com/photo-1641154748135-8032a61a3f80?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxib29rJTIwY292ZXJ8ZW58MHx8fHwxNzY0NTk1MTk0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "book cover"
+    },
+    {
+      "id": "book-cover-3",
+      "description": "Vintage style book cover with ornate typography.",
+      "imageUrl": "https://images.unsplash.com/photo-1529590003495-b2646e2718bf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHx2aW50YWdlJTIwYm9va3xlbnwwfHx8fDE3NjQ2MzY2MjN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "vintage book"
+    },
+    {
+      "id": "book-cover-4",
+      "description": "Modern book cover with bold colors and geometric shapes.",
+      "imageUrl": "https://images.unsplash.com/photo-1533208087231-c3618eab623c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxtb2Rlcm4lMjBhcnR8ZW58MHx8fHwxNzY0NTIyMzAxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "modern art"
+    },
+    {
+      "id": "book-cover-5",
+      "description": "Book cover featuring a landscape painting.",
+      "imageUrl": "https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxsYW5kc2NhcGUlMjBwYWludGluZ3xlbnwwfHx8fDE3NjQ2MjAwNzd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "landscape painting"
+    },
+    {
+      "id": "book-cover-6",
+      "description": "Book cover with a photographic portrait.",
+      "imageUrl": "https://images.unsplash.com/photo-1617744966315-b3c950c430c7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxwb3J0cmFpdCUyMHBob3RvZ3JhcGh5fGVufDB8fHx8MTc2NDUyMDcyM3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "portrait photography"
+    },
+    {
+      "id": "book-cover-7",
+      "description": "Text-heavy book cover with an academic feel.",
+      "imageUrl": "https://images.unsplash.com/photo-1626118711692-716dae857f6d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxhY2FkZW1pYyUyMGpvdXJuYWx8ZW58MHx8fHwxNzY0NjM2NjIzfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "academic journal"
+    },
+    {
+      "id": "book-cover-8",
+      "description": "Sci-fi themed book cover with cosmic imagery.",
+      "imageUrl": "https://images.unsplash.com/photo-1465101162946-4377e57745c3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxnYWxheHklMjBzdGFyc3xlbnwwfHx8fDE3NjQ2MzY2MjN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "galaxy stars"
+    },
+    {
+      "id": "about-us-image",
+      "description": "A stylish and modern office interior with a bookshelf.",
+      "imageUrl": "https://images.unsplash.com/photo-1497366754035-f200968a6e72?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxtb2Rlcm4lMjBvZmZpY2V8ZW58MHx8fHwxNzY0NTg5NDM0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "modern office"
+    },
+    {
+      "id": "contact-us-image",
+      "description": "A classic fountain pen on a piece of parchment paper.",
+      "imageUrl": "https://images.unsplash.com/photo-1509652839609-d94a8ad572db?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxmb3VudGFpbiUyMHBlbnxlbnwwfHx8fDE3NjQ1NzA1MDB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "fountain pen"
+    },
+    {
+      "id": "user-avatar-1",
+      "description": "Avatar for a user.",
+      "imageUrl": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxwZXJzb24lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NjQ1Nzk3MzV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "person portrait"
+    },
+    {
+      "id": "user-avatar-2",
+      "description": "Avatar for a user.",
+      "imageUrl": "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHx3b21hbiUyMHBvcnRyYWl0fGVufDB8fHx8MTc2NDU3Mzc4MXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "woman portrait"
+    }
+  ]
 }
