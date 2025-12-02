@@ -9,10 +9,12 @@ import { formatCurrency } from '@/lib/utils';
 import { useCart } from '@/context/cart-provider';
 import { toast } from '@/hooks/use-toast';
 import { Separator } from '@/components/ui/separator';
+import React from 'react';
 
 export default function ProductDetailPage({ params }: { params: { slug: string } }) {
+  const resolvedParams = React.use(Promise.resolve(params));
   const { addToCart } = useCart();
-  const product = mockProducts.find((p) => p.slug === params.slug);
+  const product = mockProducts.find((p) => p.slug === resolvedParams.slug);
 
   if (!product) {
     notFound();
