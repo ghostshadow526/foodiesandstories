@@ -129,15 +129,15 @@ export default function Home() {
         <div className="container mx-auto px-4 text-center animate-fade-in-up">
             <h2 className="font-headline text-3xl md:text-4xl font-bold">Why Choose Prestige Pages?</h2>
             <div className="mt-8 grid max-w-5xl mx-auto grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                <Card className="p-6 transition-transform hover:scale-105 hover:shadow-xl">
+                <Card className="p-6 transition-transform hover:scale-105 hover:shadow-xl animate-fade-in-up" style={{animationDelay: '100ms'}}>
                     <h3 className="font-headline text-xl font-semibold">Expert Curation</h3>
                     <p className="mt-2 text-muted-foreground">Each book and article is selected by our team of literary experts to ensure the highest quality.</p>
                 </Card>
-                <Card className="p-6 transition-transform hover:scale-105 hover:shadow-xl">
+                <Card className="p-6 transition-transform hover:scale-105 hover:shadow-xl animate-fade-in-up" style={{animationDelay: '200ms'}}>
                     <h3 className="font-headline text-xl font-semibold">Exclusive Content</h3>
                     <p className="mt-2 text-muted-foreground">Access a library of exclusive content you won't find anywhere else.</p>
                 </Card>
-                <Card className="p-6 transition-transform hover:scale-105 hover:shadow-xl">
+                <Card className="p-6 transition-transform hover:scale-105 hover:shadow-xl animate-fade-in-up" style={{animationDelay: '300ms'}}>
                     <h3 className="font-headline text-xl font-semibold">Seamless Experience</h3>
                     <p className="mt-2 text-muted-foreground">From browsing to purchase, enjoy a smooth, elegant, and secure user experience.</p>
                 </Card>
