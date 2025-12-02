@@ -11,9 +11,13 @@ import { toast } from '@/hooks/use-toast';
 import { Separator } from '@/components/ui/separator';
 import React from 'react';
 
-export default function ProductDetailPage({ params }: { params: { slug: string } }) {
+// The page component now needs to be async to await params
+export default function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  // Await for the params to resolve
+  const { slug } = React.use(params);
+
   const { addToCart } = useCart();
-  const product = mockProducts.find((p) => p.slug === params.slug);
+  const product = mockProducts.find((p) => p.slug === slug);
 
   if (!product) {
     notFound();
