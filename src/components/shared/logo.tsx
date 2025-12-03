@@ -7,7 +7,7 @@ export default function Logo({ className }: { className?: string }) {
     <Link href="/" className={cn("flex items-center gap-2", className)}>
       <BookMarked className="h-7 w-7 text-primary" />
       <span className="font-headline text-2xl font-bold tracking-tight">
-        Prestige Pages
+        ICESTORES
       </span>
     </Link>
   );

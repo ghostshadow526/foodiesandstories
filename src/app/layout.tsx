@@ -8,7 +8,7 @@ import './globals.css';
 import { FirebaseClientProvider } from '@/firebase/client-provider';
 
 export const metadata: Metadata = {
-  title: 'Prestige Pages',
+  title: 'ICESTORES',
   description: 'A luxurious online bookstore for premium books and articles.',
 };
 

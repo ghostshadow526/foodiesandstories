@@ -39,7 +39,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-black/30" />
         <div className="relative z-10 flex h-full flex-col items-center justify-center text-center text-white p-4">
           <h1 className="font-headline text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight animate-fade-in-up">
-            Prestige Pages
+            ICESTORES
           </h1>
           <p className="mt-4 max-w-2xl text-lg md:text-xl text-primary-foreground/90 animate-fade-in-up [animation-delay:200ms]">
             Discover a curated collection of timeless books and insightful articles. Your journey into literary excellence begins here.
@@ -127,7 +127,7 @@ export default function Home() {
 
       <section className="bg-transparent py-20">
         <div className="container mx-auto px-4 text-center animate-fade-in-up">
-            <h2 className="font-headline text-3xl md:text-4xl font-bold">Why Choose Prestige Pages?</h2>
+            <h2 className="font-headline text-3xl md:text-4xl font-bold">Why Choose ICESTORES?</h2>
             <div className="mt-8 grid max-w-5xl mx-auto grid-cols-1 md:grid-cols-3 gap-8 text-center">
                 <Card className="p-6 transition-transform hover:scale-105 hover:shadow-xl animate-fade-in-up" style={{animationDelay: '100ms'}}>
                     <h3 className="font-headline text-xl font-semibold">Expert Curation</h3>

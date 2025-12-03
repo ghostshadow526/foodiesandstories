@@ -17,7 +17,7 @@ export default function Footer() {
           </nav>
         </div>
         <div className="mt-8 border-t pt-4 text-center text-muted-foreground text-sm">
-          <p>&copy; {new Date().getFullYear()} Prestige Pages. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} ICESTORES. All rights reserved.</p>
         </div>
       </div>
     </footer>
