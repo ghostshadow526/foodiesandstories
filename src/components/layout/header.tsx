@@ -12,6 +12,9 @@ import { cn } from '@/lib/utils';
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
 import { useUser } from '@/firebase';
@@ -130,13 +133,13 @@ export default function Header() {
                     </Button>
                 </SheetTrigger>
                 <SheetContent side="left" className="w-[300px] bg-background/80 backdrop-blur-md border-r border-white/20 p-0">
-                  <div className="flex flex-col h-full">
-                    <div className="border-b p-4 border-white/20">
-                      <Logo />
-                    </div>
-                    <div className="p-4">
-                      <NavLinks className="flex-col items-start gap-4" />
-                    </div>
+                  <SheetHeader className="border-b p-4 border-white/20">
+                    <SheetTitle className="sr-only">Menu</SheetTitle>
+                    <SheetDescription className="sr-only">Main navigation menu</SheetDescription>
+                    <Logo />
+                  </SheetHeader>
+                  <div className="p-4">
+                    <NavLinks className="flex-col items-start gap-4" />
                   </div>
                 </SheetContent>
             </Sheet>
