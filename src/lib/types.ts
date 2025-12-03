@@ -1,4 +1,5 @@
 
+
 export type Product = {
   id: string;
   name: string;
@@ -48,6 +49,7 @@ export type Article = {
     slug: string;
     title: string;
     excerpt: string;
+    content: string; // Added content field
     imageUrl: string;
     imageHint: string;
     author: string;

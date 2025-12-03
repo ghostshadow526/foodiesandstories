@@ -102,7 +102,15 @@ export default function Header() {
           {link.label}
         </Link>
       ))}
-      {user?.isAdmin && <Link href="/admin" className="text-foreground/80 transition-colors hover:text-foreground">Admin</Link>}
+      {user?.isAdmin && (
+        <Link 
+          href="/admin" 
+          className="text-foreground/80 transition-colors hover:text-foreground"
+          onClick={() => setIsMobileMenuOpen(false)}
+        >
+          Admin
+        </Link>
+      )}
     </nav>
   );
 
