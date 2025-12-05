@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect } from 'react';
@@ -52,12 +53,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const router = useRouter();
 
   useEffect(() => {
+    // This effect handles the redirection once the loading is complete.
     if (!loading && !user?.isAdmin) {
       router.push('/login');
     }
   }, [user, loading, router]);
 
-  if (loading || !user?.isAdmin) {
+  // While loading, show a skeleton screen.
+  // This prevents the redirect from happening prematurely.
+  if (loading) {
     return (
       <div className="flex h-screen w-screen items-center justify-center">
         <div className="flex items-center space-x-2">
@@ -68,12 +72,27 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     );
   }
 
-  return (
-    <div className="flex">
-        <AdminSidebar />
-        <main className="flex-1 p-8 bg-background">
-            {children}
-        </main>
-    </div>
+  // After loading, if the user is confirmed to be an admin, render the layout.
+  // The useEffect above will handle non-admin users.
+  if (user?.isAdmin) {
+    return (
+      <div className="flex">
+          <AdminSidebar />
+          <main className="flex-1 p-8 bg-background">
+              {children}
+          </main>
+      </div>
     );
+  }
+
+  // This is a fallback for the brief moment after loading but before the redirect effect runs.
+  // It can also show a loading screen.
+  return (
+     <div className="flex h-screen w-screen items-center justify-center">
+        <div className="flex items-center space-x-2">
+          <Skeleton className="h-8 w-8 rounded-full" />
+          <Skeleton className="h-4 w-24" />
+        </div>
+      </div>
+  );
 }
