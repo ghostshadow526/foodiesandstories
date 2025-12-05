@@ -49,10 +49,9 @@ function UserNav({user}: {user: (FirebaseUser & { isAdmin?: boolean }) | null}) 
 
   if (!user) {
     return (
-       <Button variant="ghost" size="icon" asChild>
-          <Link href="/admin/login">
-            <User className="h-5 w-5" />
-            <span className="sr-only">Account</span>
+       <Button variant="ghost" asChild>
+          <Link href="/login">
+            Login
           </Link>
         </Button>
     )
@@ -78,6 +77,14 @@ function UserNav({user}: {user: (FirebaseUser & { isAdmin?: boolean }) | null}) 
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
+        {user.isAdmin && (
+            <DropdownMenuItem asChild>
+                <Link href="/admin">
+                    <Shield className="mr-2 h-4 w-4" />
+                    <span>Admin Panel</span>
+                </Link>
+            </DropdownMenuItem>
+        )}
         <DropdownMenuItem onClick={handleSignOut}>
           <LogOut className="mr-2 h-4 w-4" />
           <span>Log out</span>
@@ -125,12 +132,10 @@ export default function Header() {
                     </Button>
                 </SheetTrigger>
                 <SheetContent side="left" className="w-[300px] bg-background/80 backdrop-blur-md border-r border-white/20 p-0">
-                    <SheetHeader className="border-b p-4 border-white/20">
-                      <SheetTitle>
-                        <span className="sr-only">Menu</span>
-                      </SheetTitle>
+                  <SheetHeader className="p-4 text-left border-b border-white/20">
+                      <SheetTitle><span className="sr-only">Menu</span></SheetTitle>
                       <Logo />
-                    </SheetHeader>
+                  </SheetHeader>
                   <div className="p-4">
                     <NavLinks className="flex-col items-start gap-4" />
                   </div>

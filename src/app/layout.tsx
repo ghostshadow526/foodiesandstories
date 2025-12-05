@@ -8,6 +8,7 @@ import Footer from '@/components/layout/footer';
 import { cn } from '@/lib/utils';
 import './globals.css';
 import { FirebaseClientProvider } from '@/firebase/client-provider';
+import { usePathname } from 'next/navigation';
 
 // This is a workaround to make Metadata work in a client component
 // We can't move the layout to a server component because of the providers
@@ -22,6 +23,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
 
+  const pathname = usePathname();
+  const isAdminRoute = pathname.startsWith('/admin');
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -34,10 +38,10 @@ export default function RootLayout({
       <body className={cn("font-body antialiased", "min-h-screen bg-background font-sans")}>
         <FirebaseClientProvider>
           <CartProvider>
-            <div className="relative flex min-h-screen flex-col">
-              <Header />
-              <main className="flex-1">{children}</main>
-              <Footer />
+            <div className={cn("relative flex min-h-screen flex-col", { 'bg-background': !isAdminRoute })}>
+              {!isAdminRoute && <Header />}
+              <main className={cn({ "flex-1": !isAdminRoute })}>{children}</main>
+              {!isAdminRoute && <Footer />}
             </div>
             <Toaster />
           </CartProvider>
