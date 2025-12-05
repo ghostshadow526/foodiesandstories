@@ -76,17 +76,6 @@
         "author",
         "publishedAt"
       ]
-    },
-    "admin": {
-      "title": "Admin",
-      "description": "An administrator user.",
-      "type": "object",
-      "properties": {
-        "isAdmin": {
-          "type": "boolean"
-        }
-      },
-      "required": ["isAdmin"]
     }
   },
   "auth": {
@@ -106,12 +95,6 @@
         "$ref": "#/backend/entities/article"
       },
       "description": "Stores all the articles for the blog."
-    },
-    "/admins/{userId}": {
-        "schema": {
-            "$ref": "#/backend/entities/admin"
-        },
-        "description": "Stores a list of admin user UIDs."
     }
   }
 }

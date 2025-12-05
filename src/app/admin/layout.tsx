@@ -54,14 +54,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   useEffect(() => {
     // This effect handles the redirection once the loading is complete.
-    if (!loading && !user?.isAdmin) {
+    if (!loading && !user) {
       router.push('/login');
     }
   }, [user, loading, router]);
 
   // While loading, show a skeleton screen.
   // This prevents the redirect from happening prematurely.
-  if (loading) {
+  if (loading || !user) {
     return (
       <div className="flex h-screen w-screen items-center justify-center">
         <div className="flex items-center space-x-2">
@@ -76,7 +76,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   // After loading, if the user is confirmed to be an admin, render the layout.
   // The useEffect above will handle non-admin users.
-  if (user?.isAdmin) {
+  if (user) {
     return (
       <div className="flex">
           <AdminSidebar />
