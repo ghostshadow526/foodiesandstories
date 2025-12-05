@@ -1,9 +1,11 @@
 
 'use client';
-import { Book, Home, Newspaper, Settings } from 'lucide-react';
+import { Book, Home, Newspaper } from 'lucide-react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import { useUser } from '@/firebase';
+import { useEffect } from 'react';
 
 const navLinks = [
     { href: '/admin', label: 'Dashboard', icon: Home },
@@ -13,6 +15,31 @@ const navLinks = [
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
+    const { user, loading } = useUser();
+    const router = useRouter();
+
+    useEffect(() => {
+        if (!loading && !user?.isAdmin && pathname !== '/admin/login') {
+            router.push('/admin/login');
+        }
+    }, [user, loading, router, pathname]);
+
+    if (loading && pathname !== '/admin/login') {
+        return (
+            <div className="flex justify-center items-center h-screen">
+                <div>Loading...</div>
+            </div>
+        );
+    }
+    
+    if (pathname === '/admin/login') {
+        return <>{children}</>;
+    }
+
+    if (!user?.isAdmin) {
+        return null;
+    }
+
     return (
         <div className="flex min-h-screen">
             <aside className="w-64 bg-card border-r p-4 hidden md:flex flex-col">
