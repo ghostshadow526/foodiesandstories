@@ -65,8 +65,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     return (
       <div className="flex h-screen w-screen items-center justify-center">
         <div className="flex items-center space-x-2">
-          <Skeleton className="h-8 w-8 rounded-full" />
-          <Skeleton className="h-4 w-24" />
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-[250px]" />
+            <Skeleton className="h-4 w-[200px]" />
+          </div>
         </div>
       </div>
     );
@@ -90,8 +92,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
      <div className="flex h-screen w-screen items-center justify-center">
         <div className="flex items-center space-x-2">
-          <Skeleton className="h-8 w-8 rounded-full" />
-          <Skeleton className="h-4 w-24" />
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-[250px]" />
+            <Skeleton className="h-4 w-[200px]" />
+          </div>
         </div>
       </div>
   );
