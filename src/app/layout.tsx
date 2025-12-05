@@ -1,7 +1,6 @@
 
 'use client';
 import type { Metadata } from 'next';
-import { usePathname } from 'next/navigation';
 import { Toaster } from '@/components/ui/toaster';
 import { CartProvider } from '@/context/cart-provider';
 import Header from '@/components/layout/header';
@@ -22,8 +21,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const pathname = usePathname();
-  const isAdminRoute = pathname.startsWith('/admin');
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -38,9 +35,9 @@ export default function RootLayout({
         <FirebaseClientProvider>
           <CartProvider>
             <div className="relative flex min-h-screen flex-col">
-              {!isAdminRoute && <Header />}
+              <Header />
               <main className="flex-1">{children}</main>
-              {!isAdminRoute && <Footer />}
+              <Footer />
             </div>
             <Toaster />
           </CartProvider>

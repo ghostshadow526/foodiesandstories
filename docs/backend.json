@@ -1,19 +1,5 @@
 {
   "entities": {
-    "admin": {
-      "title": "Admin",
-      "description": "An administrative user.",
-      "type": "object",
-      "properties": {
-        "uid": {
-          "type": "string",
-          "description": "The user's unique ID."
-        }
-      },
-      "required": [
-        "uid"
-      ]
-    },
     "product": {
       "title": "Product",
       "description": "A product (book) sold in the store.",
@@ -98,12 +84,6 @@
     ]
   },
   "firestore": {
-    "/admins/{adminId}": {
-      "schema": {
-        "$ref": "#/backend/entities/admin"
-      },
-      "description": "Stores information about administrative users."
-    },
     "/products/{productId}": {
       "schema": {
         "$ref": "#/backend/entities/product"

@@ -2,8 +2,7 @@
 
 import { useState, useEffect, createContext, useContext } from 'react';
 import { onAuthStateChanged, type User as FirebaseUser } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
-import { useAuth, useFirestore } from '../provider';
+import { useAuth } from '../provider';
 
 export type User = FirebaseUser & {
     isAdmin: boolean;
@@ -26,24 +25,20 @@ export const useUser = () => {
 
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     const auth = useAuth();
-    const firestore = useFirestore();
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (!auth || !firestore) {
+        if (!auth) {
             setLoading(false);
             return;
         };
 
         const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
             if (firebaseUser) {
-                const adminDocRef = doc(firestore, "admins", firebaseUser.uid);
-                const adminDoc = await getDoc(adminDocRef);
-
                 setUser({
                     ...firebaseUser,
-                    isAdmin: adminDoc.exists()
+                    isAdmin: false
                 });
             } else {
                 setUser(null);
@@ -52,7 +47,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         });
 
         return () => unsubscribe();
-    }, [auth, firestore]);
+    }, [auth]);
 
     return (
         <UserContext.Provider value={{ user, loading }}>
@@ -60,5 +55,3 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         </UserContext.Provider>
     );
 };
-
-// Update FirebaseClientProvider to include UserProvider
