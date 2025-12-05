@@ -1,23 +1,73 @@
+
 'use client';
 
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import { mockProducts } from '@/lib/data';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Button } from '@/components/ui/button';
 import { formatCurrency } from '@/lib/utils';
 import { useCart } from '@/context/cart-provider';
 import { toast } from '@/hooks/use-toast';
 import { Separator } from '@/components/ui/separator';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useFirestore } from '@/firebase';
+import { collection, query, where, getDocs } from 'firebase/firestore';
+import type { Product } from '@/lib/types';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { Skeleton } from '@/components/ui/skeleton';
 
-// The page component now needs to be async to await params
-export default function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
-  // Await for the params to resolve
-  const { slug } = React.use(params);
+export default function ProductDetailPage({ params }: { params: { slug: string } }) {
+  const { slug } = params;
+  const firestore = useFirestore();
+  const [product, setProduct] = useState<Product | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const { addToCart } = useCart();
-  const product = mockProducts.find((p) => p.slug === slug);
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      if (!firestore) return;
+      setLoading(true);
+      try {
+        const q = query(collection(firestore, 'products'), where('slug', '==', slug));
+        const querySnapshot = await getDocs(q);
+        if (querySnapshot.empty) {
+          setProduct(null);
+        } else {
+           const docData = querySnapshot.docs[0].data() as Omit<Product, 'id'>;
+           setProduct({
+             id: querySnapshot.docs[0].id,
+             ...docData
+           });
+        }
+      } catch (error) {
+        console.error("Error fetching product:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProduct();
+  }, [firestore, slug]);
+
+
+  if (loading) {
+    return (
+        <div className="container mx-auto px-4 py-12">
+            <div className="grid md:grid-cols-2 gap-12">
+                <Skeleton className="aspect-[2/3] w-full max-w-md mx-auto rounded-lg" />
+                <div className="space-y-4">
+                    <Skeleton className="h-12 w-3/4" />
+                    <Skeleton className="h-6 w-1/2" />
+                    <Skeleton className="h-8 w-1/4" />
+                    <Separator className="my-8" />
+                    <Skeleton className="h-6 w-full" />
+                    <Skeleton className="h-6 w-full" />
+                    <Skeleton className="h-6 w-5/6" />
+                    <Skeleton className="h-12 w-40 mt-8" />
+                </div>
+            </div>
+        </div>
+    )
+  }
 
   if (!product) {
     notFound();

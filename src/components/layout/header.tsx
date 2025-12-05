@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -12,7 +13,6 @@ import { cn } from '@/lib/utils';
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { useAuth } from '@/firebase';
+import { SheetDescription } from '../ui/sheet';
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -37,7 +38,7 @@ const navLinks = [
   { href: '/contact', label: 'Contact' },
 ];
 
-function UserNav({user}: {user: FirebaseUser | null}) {
+function UserNav({user}: {user: (FirebaseUser & { isAdmin?: boolean }) | null}) {
   const auth = useAuth();
   
   const handleSignOut = async () => {
@@ -70,13 +71,21 @@ function UserNav({user}: {user: FirebaseUser | null}) {
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">{user.displayName}</p>
+            <p className="text-sm font-medium leading-none">{user.displayName ?? 'User'}</p>
             <p className="text-xs leading-none text-muted-foreground">
               {user.email}
             </p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
+        {user.isAdmin && (
+          <DropdownMenuItem asChild>
+            <Link href="/admin">
+              <Shield className="mr-2 h-4 w-4" />
+              <span>Admin Panel</span>
+            </Link>
+          </DropdownMenuItem>
+        )}
         <DropdownMenuItem onClick={handleSignOut}>
           <LogOut className="mr-2 h-4 w-4" />
           <span>Log out</span>
@@ -124,11 +133,10 @@ export default function Header() {
                     </Button>
                 </SheetTrigger>
                 <SheetContent side="left" className="w-[300px] bg-background/80 backdrop-blur-md border-r border-white/20 p-0">
-                  <SheetHeader className="border-b p-4 border-white/20">
-                    <SheetTitle>Menu</SheetTitle>
-                    <SheetDescription className="sr-only">Main navigation menu</SheetDescription>
-                    <Logo />
-                  </SheetHeader>
+                    <SheetHeader className="border-b p-4 border-white/20">
+                      <SheetTitle className="sr-only">Menu</SheetTitle>
+                      <Logo />
+                    </SheetHeader>
                   <div className="p-4">
                     <NavLinks className="flex-col items-start gap-4" />
                   </div>
@@ -141,7 +149,7 @@ export default function Header() {
         </div>
 
         <div className="flex flex-1 items-center justify-end gap-4">
-          {user?.isAdmin && (
+           {user?.isAdmin && (
             <Button asChild variant="secondary" size="sm">
               <Link href="/admin">
                 <Shield className="mr-2 h-4 w-4" />
