@@ -10,11 +10,92 @@
           "description": "The user's unique ID."
         }
       },
-      "required": ["uid"]
+      "required": [
+        "uid"
+      ]
+    },
+    "product": {
+      "title": "Product",
+      "description": "A product (book) sold in the store.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "slug": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "price": {
+          "type": "number"
+        },
+        "author": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        },
+        "imageId": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "slug",
+        "price",
+        "author"
+      ]
+    },
+    "article": {
+      "title": "Article",
+      "description": "A blog post or article.",
+      "type": "object",
+      "properties": {
+        "slug": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "excerpt": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "imageUrl": {
+          "type": "string"
+        },
+        "imageHint": {
+          "type": "string"
+        },
+        "author": {
+          "type": "string"
+        },
+        "publishedAt": {
+          "type": "string",
+          "format": "date"
+        },
+        "likes": {
+          "type": "number",
+          "description": "The number of likes the article has."
+        }
+      },
+      "required": [
+        "slug",
+        "title",
+        "content",
+        "author",
+        "publishedAt"
+      ]
     }
   },
   "auth": {
-    "providers": ["email"]
+    "providers": [
+      "email"
+    ]
   },
   "firestore": {
     "/admins/{adminId}": {
@@ -22,6 +103,18 @@
         "$ref": "#/backend/entities/admin"
       },
       "description": "Stores information about administrative users."
+    },
+    "/products/{productId}": {
+      "schema": {
+        "$ref": "#/backend/entities/product"
+      },
+      "description": "Stores all the books available in the store."
+    },
+    "/articles/{articleId}": {
+      "schema": {
+        "$ref": "#/backend/entities/article"
+      },
+      "description": "Stores all the articles for the blog."
     }
   }
 }

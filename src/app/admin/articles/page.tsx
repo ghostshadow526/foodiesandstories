@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useFirestore } from '@/firebase';
-import { collection, addDoc, getDocs } from 'firebase/firestore';
+import { collection, addDoc, getDocs, doc, updateDoc, increment } from 'firebase/firestore';
 import { format } from 'date-fns';
 
 import { Button } from '@/components/ui/button';
@@ -18,6 +18,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { toast } from '@/hooks/use-toast';
 import type { Article } from '@/lib/types';
 import Image from 'next/image';
+import { ThumbsUp } from 'lucide-react';
 
 const articleSchema = z.object({
   title: z.string().min(5, "Title must be at least 5 characters"),
@@ -54,12 +55,21 @@ export default function AdminArticlesPage() {
     if (!firestore) return;
     const querySnapshot = await getDocs(collection(firestore, "articles"));
     const articlesData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Article));
-    setArticles(articlesData);
+    setArticles(articlesData.sort((a, b) => b.publishedAt.localeCompare(a.publishedAt)));
   }
 
   useEffect(() => {
     fetchArticles();
   }, [firestore]);
+
+  const handleLike = async (articleId: string) => {
+    if (!firestore) return;
+    const articleRef = doc(firestore, 'articles', articleId);
+    await updateDoc(articleRef, {
+      likes: increment(1)
+    });
+    fetchArticles();
+  }
 
 
   const onSubmit = async (data: ArticleFormValues) => {
@@ -71,13 +81,14 @@ export default function AdminArticlesPage() {
 
     try {
       const slug = slugify(data.title);
-      const publishedAt = format(new Date(), 'MMMM d, yyyy');
+      const publishedAt = new Date().toISOString();
       
       await addDoc(collection(firestore, "articles"), {
         ...data,
         slug,
         publishedAt,
         imageHint: "article cover",
+        likes: 0,
       });
 
       toast({ title: 'Success', description: 'Article added successfully' });
@@ -115,7 +126,7 @@ export default function AdminArticlesPage() {
                 )} />
                 <FormField control={form.control} name="imageUrl" render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Image URL</FormLabel>
+                    <FormLabel>Image URL (ImageKit)</FormLabel>
                     <FormControl><Input placeholder="https://ik.imagekit.io/..." {...field} /></FormControl>
                     <FormMessage />
                   </FormItem>
@@ -145,7 +156,8 @@ export default function AdminArticlesPage() {
                 <TableRow>
                   <TableHead>Title</TableHead>
                   <TableHead>Author</TableHead>
-                  <TableHead>Published</TableHead>
+                  <TableHead className="text-center">Likes</TableHead>
+                  <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -153,7 +165,13 @@ export default function AdminArticlesPage() {
                   <TableRow key={article.id}>
                     <TableCell className="font-medium">{article.title}</TableCell>
                     <TableCell>{article.author}</TableCell>
-                    <TableCell>{article.publishedAt}</TableCell>
+                    <TableCell className="text-center">{article.likes ?? 0}</TableCell>
+                    <TableCell>
+                      <Button variant="outline" size="sm" onClick={() => handleLike(article.id)}>
+                        <ThumbsUp className="h-4 w-4 mr-2" />
+                        Like
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>

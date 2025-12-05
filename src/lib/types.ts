@@ -54,4 +54,5 @@ export type Article = {
     imageHint: string;
     author: string;
     publishedAt: string;
+    likes?: number;
 };
