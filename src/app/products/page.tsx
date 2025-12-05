@@ -6,6 +6,7 @@ import { collection, getDocs } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import type { Product } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
 
 
 export default function ProductsPage() {
