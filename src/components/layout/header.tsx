@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { BookOpen, ShoppingCart, User, Menu, X, Newspaper, LogOut } from 'lucide-react';
+import { BookOpen, ShoppingCart, User, Menu, X, Newspaper, LogOut, Shield } from 'lucide-react';
 import { useState } from 'react';
 import { signOut, type User as FirebaseUser } from 'firebase/auth';
 
@@ -105,15 +105,6 @@ export default function Header() {
           {link.label}
         </Link>
       ))}
-      {user?.isAdmin && (
-        <Link 
-          href="/admin" 
-          className="text-foreground/80 transition-colors hover:text-foreground"
-          onClick={() => setIsMobileMenuOpen(false)}
-        >
-          Admin
-        </Link>
-      )}
     </nav>
   );
 
@@ -134,7 +125,7 @@ export default function Header() {
                 </SheetTrigger>
                 <SheetContent side="left" className="w-[300px] bg-background/80 backdrop-blur-md border-r border-white/20 p-0">
                   <SheetHeader className="border-b p-4 border-white/20">
-                    <SheetTitle className="sr-only">Menu</SheetTitle>
+                    <SheetTitle>Menu</SheetTitle>
                     <SheetDescription className="sr-only">Main navigation menu</SheetDescription>
                     <Logo />
                   </SheetHeader>
@@ -150,6 +141,14 @@ export default function Header() {
         </div>
 
         <div className="flex flex-1 items-center justify-end gap-4">
+          {user?.isAdmin && (
+            <Button asChild variant="secondary" size="sm">
+              <Link href="/admin">
+                <Shield className="mr-2 h-4 w-4" />
+                Admin Panel
+              </Link>
+            </Button>
+          )}
           <Button variant="ghost" size="icon" asChild>
             <Link href="/cart">
               <ShoppingCart className="h-5 w-5" />
