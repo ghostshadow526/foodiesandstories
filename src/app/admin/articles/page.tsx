@@ -51,8 +51,17 @@ export default function AdminArticlesPage() {
   });
   
   const authenticator = async () => {
-    const response = await fetch('/api/imagekit/auth');
-    return await response.json();
+    try {
+        const response = await fetch('/api/imagekit/auth');
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Request failed with status ${response.status}: ${errorText}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error("Authentication request failed:", error);
+        throw new Error(`Authentication request failed: ${error instanceof Error ? error.message : String(error)}`);
+    }
   };
 
 
@@ -72,7 +81,9 @@ export default function AdminArticlesPage() {
   };
 
   useEffect(() => {
-    fetchArticles();
+    if (firestore) {
+      fetchArticles();
+    }
   }, [firestore]);
 
   const onSubmit = async (data: ArticleFormValues) => {
@@ -109,7 +120,7 @@ export default function AdminArticlesPage() {
 
   const onUploadError = (err: any) => {
     console.error("Upload error:", err);
-    toast({ variant: 'destructive', title: 'Upload Failed', description: 'There was an error uploading the image.' });
+    toast({ variant: 'destructive', title: 'Upload Failed', description: err.message || 'There was an error uploading the image.' });
   }
 
   const onUploadSuccess = (res: any) => {
@@ -154,18 +165,18 @@ export default function AdminArticlesPage() {
                             <FormLabel>Article Image</FormLabel>
                             <FormControl>
                                 <div className="flex items-center gap-4">
-                                     <IKUpload
-                                        fileName="article-image.jpg"
-                                        onError={onUploadError}
-                                        onSuccess={onUploadSuccess}
-                                        useUniqueFileName={true}
-                                    >
-                                      <label className="cursor-pointer">
-                                          <Button type="button" variant="outline" asChild>
-                                              <span><UploadCloud className="mr-2 h-4 w-4" /> Upload</span>
-                                          </Button>
-                                      </label>
-                                    </IKUpload>
+                                    <label className="cursor-pointer">
+                                        <Button type="button" variant="outline" asChild>
+                                            <span><UploadCloud className="mr-2 h-4 w-4" /> Upload</span>
+                                        </Button>
+                                        <IKUpload
+                                            fileName="article-image.jpg"
+                                            onError={onUploadError}
+                                            onSuccess={onUploadSuccess}
+                                            useUniqueFileName={true}
+                                            className="hidden"
+                                        />
+                                    </label>
                                     <Input {...field} placeholder="Image URL will appear here" readOnly />
                                 </div>
                             </FormControl>
