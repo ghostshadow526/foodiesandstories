@@ -17,7 +17,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import type { Article } from '@/lib/types';
 import { ThumbsUp, UploadCloud } from 'lucide-react';
 import { format } from 'date-fns';
-import { IKContext, IKUpload } from 'imagekit-javascript/react';
+import { IKContext, IKUpload } from 'imagekitio-react';
 
 const articleSchema = z.object({
   title: z.string().min(1, 'Title is required'),
@@ -158,14 +158,14 @@ export default function AdminArticlesPage() {
                                         fileName="article-image.jpg"
                                         onError={onUploadError}
                                         onSuccess={onUploadSuccess}
-                                        className="hidden"
-                                        id="article-image-upload"
-                                    />
-                                    <label htmlFor="article-image-upload" className="cursor-pointer">
-                                        <Button type="button" variant="outline" asChild>
-                                            <span><UploadCloud className="mr-2 h-4 w-4" /> Upload</span>
-                                        </Button>
-                                    </label>
+                                        useUniqueFileName={true}
+                                    >
+                                      <label className="cursor-pointer">
+                                          <Button type="button" variant="outline" asChild>
+                                              <span><UploadCloud className="mr-2 h-4 w-4" /> Upload</span>
+                                          </Button>
+                                      </label>
+                                    </IKUpload>
                                     <Input {...field} placeholder="Image URL will appear here" readOnly />
                                 </div>
                             </FormControl>

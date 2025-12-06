@@ -16,7 +16,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import type { Product } from '@/lib/types';
 import { formatCurrency } from '@/lib/utils';
-import { IKContext, IKUpload } from 'imagekit-javascript/react';
+import { IKContext, IKUpload } from 'imagekitio-react';
 import { UploadCloud } from 'lucide-react';
 
 const bookSchema = z.object({
@@ -144,14 +144,14 @@ export default function AdminBooksPage() {
                                     fileName="book-cover.jpg"
                                     onError={onUploadError}
                                     onSuccess={onUploadSuccess}
-                                    className="hidden"
-                                    id="book-image-upload"
-                                />
-                                <label htmlFor="book-image-upload" className="cursor-pointer">
-                                    <Button type="button" variant="outline" asChild>
-                                        <span><UploadCloud className="mr-2 h-4 w-4" /> Upload</span>
-                                    </Button>
-                                </label>
+                                    useUniqueFileName={true}
+                                >
+                                  <label className="cursor-pointer">
+                                      <Button type="button" variant="outline" asChild>
+                                          <span><UploadCloud className="mr-2 h-4 w-4" /> Upload</span>
+                                      </Button>
+                                  </label>
+                                </IKUpload>
                                 <Input {...field} placeholder="Image URL will appear here" readOnly />
                             </div>
                         </FormControl>
