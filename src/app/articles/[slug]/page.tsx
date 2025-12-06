@@ -13,7 +13,7 @@ import { ThumbsUp, Eye } from 'lucide-react';
 import { format } from 'date-fns';
 
 export default function ArticleDetailPage({ params }: { params: { slug: string } }) {
-  const { slug } = params;
+  const slug = params.slug;
   const firestore = useFirestore();
   const [article, setArticle] = useState<Article | null>(null);
   const [loading, setLoading] = useState(true);

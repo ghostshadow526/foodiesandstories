@@ -15,7 +15,7 @@ import type { Product } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function ProductDetailPage({ params }: { params: { slug: string } }) {
-  const { slug } = params;
+  const slug = params.slug;
   const firestore = useFirestore();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
