@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { useFirestore } from '@/firebase';
-import { collection, addDoc, getDocs } from 'firebase/firestore';
+import { collection, addDoc, getDocs, doc, deleteDoc } from 'firebase/firestore';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -17,7 +17,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import type { Product } from '@/lib/types';
 import { formatCurrency } from '@/lib/utils';
 import { IKContext, IKUpload } from 'imagekitio-react';
-import { UploadCloud } from 'lucide-react';
+import { UploadCloud, Trash2 } from 'lucide-react';
 
 const bookSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -80,6 +80,18 @@ export default function AdminBooksPage() {
       setLoading(false);
     }
   };
+  
+  const handleDeleteBook = async (bookId: string) => {
+    if(!firestore) return;
+    try {
+      await deleteDoc(doc(firestore, 'products', bookId));
+      toast({ title: 'Success', description: 'Book deleted successfully.' });
+      fetchBooks();
+    } catch (error) {
+      console.error('Error deleting book:', error);
+      toast({ variant: 'destructive', title: 'Error', description: 'Could not delete book.' });
+    }
+  }
 
   useEffect(() => {
     if(firestore){
@@ -192,17 +204,24 @@ export default function AdminBooksPage() {
                   <TableHead>Name</TableHead>
                   <TableHead>Author</TableHead>
                   <TableHead>Price</TableHead>
+                  <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {loading ? (
-                    <TableRow><TableCell colSpan={3}>Loading...</TableCell></TableRow>
+                    <TableRow><TableCell colSpan={4}>Loading...</TableCell></TableRow>
                 ) : (
                     books.map(book => (
                         <TableRow key={book.id}>
                             <TableCell>{book.name}</TableCell>
                             <TableCell>{book.author}</TableCell>
                             <TableCell>{formatCurrency(book.price)}</TableCell>
+                             <TableCell>
+                                <Button size="sm" variant="destructive" onClick={() => handleDeleteBook(book.id)}>
+                                    <Trash2 className="mr-2 h-4 w-4" />
+                                    Delete
+                                </Button>
+                            </TableCell>
                         </TableRow>
                     ))
                 )}

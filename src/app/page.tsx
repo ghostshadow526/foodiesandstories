@@ -38,11 +38,21 @@ export default function Home() {
       setLoading(true);
       try {
         const productsRef = collection(firestore, 'products');
-        const newArrivalsQuery = query(productsRef, orderBy('name', 'desc'), limit(8));
-        const newArrivalsSnapshot = await getDocs(newArrivalsQuery);
-        const newArrivalsData = newArrivalsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Product));
-        setNewArrivals(newArrivalsData.slice(0, 4));
-        setFeaturedProducts(newArrivalsData.slice(4, 8));
+        const allProductsQuery = query(productsRef, orderBy('name', 'desc'));
+        const allProductsSnapshot = await getDocs(allProductsQuery);
+        const allProductsData = allProductsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Product));
+        
+        setNewArrivals(allProductsData.slice(0, 4));
+
+        const placeholderImageIds = ['book-cover-5', 'book-cover-6', 'book-cover-7', 'book-cover-8'];
+        const featuredWithPlaceholders = allProductsData.slice(4, 8).map((product, index) => {
+          const placeholder = PlaceHolderImages.find(p => p.id === placeholderImageIds[index % placeholderImageIds.length]);
+          return {
+            ...product,
+            imageUrl: placeholder?.imageUrl ?? product.imageUrl,
+          };
+        });
+        setFeaturedProducts(featuredWithPlaceholders);
 
 
         const articlesRef = collection(firestore, 'articles');

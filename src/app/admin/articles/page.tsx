@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { useFirestore } from '@/firebase';
-import { collection, addDoc, getDocs, doc, updateDoc, increment } from 'firebase/firestore';
+import { collection, addDoc, getDocs, doc, updateDoc, increment, deleteDoc } from 'firebase/firestore';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -15,7 +15,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import type { Article } from '@/lib/types';
-import { ThumbsUp, UploadCloud } from 'lucide-react';
+import { ThumbsUp, UploadCloud, Trash2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { IKContext, IKUpload } from 'imagekitio-react';
 
@@ -115,6 +115,18 @@ export default function AdminArticlesPage() {
     } catch (error) {
         console.error("Error incrementing likes:", error);
         toast({ variant: 'destructive', title: 'Error', description: 'Could not increment likes.' });
+    }
+  }
+
+  const handleDeleteArticle = async (articleId: string) => {
+    if(!firestore) return;
+    try {
+      await deleteDoc(doc(firestore, 'articles', articleId));
+      toast({ title: 'Success', description: 'Article deleted successfully.' });
+      fetchArticles();
+    } catch (error) {
+      console.error('Error deleting article:', error);
+      toast({ variant: 'destructive', title: 'Error', description: 'Could not delete article.' });
     }
   }
 
@@ -219,10 +231,14 @@ export default function AdminArticlesPage() {
                                 <TableCell>{article.title}</TableCell>
                                 <TableCell>{format(new Date(article.publishedAt), 'dd MMM yyyy')}</TableCell>
                                 <TableCell>{article.likes ?? 0}</TableCell>
-                                <TableCell>
+                                <TableCell className="flex gap-2">
                                     <Button size="sm" onClick={() => handleIncrementLikes(article.id)}>
                                         <ThumbsUp className="mr-2 h-4 w-4" />
                                         Like
+                                    </Button>
+                                    <Button size="sm" variant="destructive" onClick={() => handleDeleteArticle(article.id)}>
+                                        <Trash2 className="mr-2 h-4 w-4" />
+                                        Delete
                                     </Button>
                                 </TableCell>
                             </TableRow>
