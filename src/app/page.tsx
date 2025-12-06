@@ -37,24 +37,32 @@ export default function Home() {
     const fetchHomePageData = async () => {
       setLoading(true);
       try {
+        // Fetch New Arrivals
         const productsRef = collection(firestore, 'products');
-        const allProductsQuery = query(productsRef, orderBy('name', 'desc'));
-        const allProductsSnapshot = await getDocs(allProductsQuery);
-        const allProductsData = allProductsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Product));
-        
-        setNewArrivals(allProductsData.slice(0, 4));
+        const newArrivalsQuery = query(productsRef, orderBy('name', 'desc'), limit(4));
+        const newArrivalsSnapshot = await getDocs(newArrivalsQuery);
+        const newArrivalsData = newArrivalsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Product));
+        setNewArrivals(newArrivalsData);
 
-        const placeholderImageIds = ['book-cover-5', 'book-cover-6', 'book-cover-7', 'book-cover-8'];
-        const featuredWithPlaceholders = allProductsData.slice(4, 8).map((product, index) => {
-          const placeholder = PlaceHolderImages.find(p => p.id === placeholderImageIds[index % placeholderImageIds.length]);
-          return {
-            ...product,
-            imageUrl: placeholder?.imageUrl ?? product.imageUrl,
-          };
+        // Setup Featured Products with placeholders
+        const featuredPlaceholderIds = ['book-cover-5', 'book-cover-6', 'book-cover-7', 'book-cover-8'];
+        const featuredProductsData = featuredPlaceholderIds.map((id, index) => {
+            const placeholder = PlaceHolderImages.find(p => p.id === id);
+            return {
+                id: `featured-${index}`,
+                name: `Featured Book ${index + 1}`,
+                slug: `featured-book-${index + 1}`,
+                description: "A captivating tale of adventure and mystery that will keep you on the edge of your seat.",
+                price: 2999.99,
+                author: "Author Name",
+                category: "Featured",
+                imageId: placeholder?.id ?? '',
+                imageUrl: placeholder?.imageUrl ?? '',
+            };
         });
-        setFeaturedProducts(featuredWithPlaceholders);
+        setFeaturedProducts(featuredProductsData);
 
-
+        // Fetch Journal Entries
         const articlesRef = collection(firestore, 'articles');
         const articlesQuery = query(articlesRef, orderBy('publishedAt', 'desc'), limit(3));
         const articlesSnapshot = await getDocs(articlesQuery);
@@ -113,7 +121,7 @@ export default function Home() {
               <Carousel
                 opts={{
                   align: "start",
-                  loop: true,
+                  loop: newArrivals.length > 3,
                 }}
                 className="w-full"
               >
