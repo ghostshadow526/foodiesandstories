@@ -84,7 +84,9 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     try {
-      localStorage.setItem('icestores_cart', JSON.stringify(state.cart));
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('icestores_cart', JSON.stringify(state.cart));
+      }
     } catch (error) {
         console.error("Failed to save cart to localStorage", error);
     }

@@ -15,8 +15,9 @@ import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import type { Article } from '@/lib/types';
-import { ThumbsUp } from 'lucide-react';
+import { ThumbsUp, UploadCloud } from 'lucide-react';
 import { format } from 'date-fns';
+import { IKContext, IKUpload } from 'imagekit-javascript/react';
 
 const articleSchema = z.object({
   title: z.string().min(1, 'Title is required'),
@@ -24,7 +25,7 @@ const articleSchema = z.object({
   slug: z.string().min(1, 'Slug is required'),
   excerpt: z.string().min(1, 'Excerpt is required'),
   content: z.string().min(1, 'Content is required'),
-  imageUrl: z.string().url('Must be a valid URL'),
+  imageUrl: z.string().url('A valid image URL is required.'),
   imageHint: z.string().optional(),
 });
 
@@ -48,6 +49,12 @@ export default function AdminArticlesPage() {
       imageHint: '',
     },
   });
+  
+  const authenticator = async () => {
+    const response = await fetch('/api/imagekit/auth');
+    return await response.json();
+  };
+
 
   const fetchArticles = async () => {
     if (!firestore) return;
@@ -92,7 +99,6 @@ export default function AdminArticlesPage() {
       await updateDoc(articleRef, {
         likes: increment(1)
       });
-      // Optimistically update UI
       setArticles(prev => prev.map(a => a.id === articleId ? { ...a, likes: (a.likes ?? 0) + 1 } : a));
       toast({ title: 'Success', description: 'Likes incremented.' });
     } catch (error) {
@@ -101,84 +107,122 @@ export default function AdminArticlesPage() {
     }
   }
 
+  const onUploadError = (err: any) => {
+    console.error("Upload error:", err);
+    toast({ variant: 'destructive', title: 'Upload Failed', description: 'There was an error uploading the image.' });
+  }
+
+  const onUploadSuccess = (res: any) => {
+    form.setValue('imageUrl', res.url);
+    toast({ title: 'Upload Success', description: 'Image has been uploaded and URL is set.' });
+  }
+
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      <div className="lg:col-span-1">
-        <Card>
-          <CardHeader>
-            <CardTitle>Add New Article</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                <FormField control={form.control} name="title" render={({ field }) => (
-                  <FormItem><FormLabel>Title</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
-                )} />
-                <FormField control={form.control} name="author" render={({ field }) => (
-                  <FormItem><FormLabel>Author</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
-                )} />
-                <FormField control={form.control} name="slug" render={({ field }) => (
-                  <FormItem><FormLabel>Slug</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
-                )} />
-                <FormField control={form.control} name="excerpt" render={({ field }) => (
-                    <FormItem><FormLabel>Excerpt</FormLabel><FormControl><Textarea {...field} /></FormControl><FormMessage /></FormItem>
-                )} />
-                <FormField control={form.control} name="content" render={({ field }) => (
-                  <FormItem><FormLabel>Content</FormLabel><FormControl><Textarea rows={6} {...field} /></FormControl><FormMessage /></FormItem>
-                )} />
-                <FormField control={form.control} name="imageUrl" render={({ field }) => (
-                    <FormItem><FormLabel>Image URL</FormLabel><FormControl><Input {...field} placeholder="https://..."/></FormControl><FormMessage /></FormItem>
-                )} />
-                 <FormField control={form.control} name="imageHint" render={({ field }) => (
-                    <FormItem><FormLabel>Image Hint (for AI)</FormLabel><FormControl><Input {...field} placeholder="e.g. 'vintage book'"/></FormControl><FormMessage /></FormItem>
-                )} />
-                <Button type="submit" disabled={form.formState.isSubmitting}>
-                  {form.formState.isSubmitting ? 'Adding...' : 'Add Article'}
-                </Button>
-              </form>
-            </Form>
-          </CardContent>
-        </Card>
-      </div>
-      <div className="lg:col-span-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Existing Articles</CardTitle>
-          </CardHeader>
-          <CardContent>
-             <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Title</TableHead>
-                  <TableHead>Published</TableHead>
-                  <TableHead>Likes</TableHead>
-                  <TableHead>Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {loading ? (
-                    <TableRow><TableCell colSpan={4}>Loading...</TableCell></TableRow>
-                ) : (
-                    articles.map(article => (
-                        <TableRow key={article.id}>
-                            <TableCell>{article.title}</TableCell>
-                            <TableCell>{format(new Date(article.publishedAt), 'dd MMM yyyy')}</TableCell>
-                            <TableCell>{article.likes ?? 0}</TableCell>
-                            <TableCell>
-                                <Button size="sm" onClick={() => handleIncrementLikes(article.id)}>
-                                    <ThumbsUp className="mr-2 h-4 w-4" />
-                                    Like
-                                </Button>
-                            </TableCell>
-                        </TableRow>
-                    ))
-                )}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+    <IKContext
+        urlEndpoint={process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT}
+        publicKey={process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY}
+        authenticator={authenticator}
+    >
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-1">
+            <Card>
+            <CardHeader>
+                <CardTitle>Add New Article</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                    <FormField control={form.control} name="title" render={({ field }) => (
+                    <FormItem><FormLabel>Title</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                    )} />
+                    <FormField control={form.control} name="author" render={({ field }) => (
+                    <FormItem><FormLabel>Author</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                    )} />
+                    <FormField control={form.control} name="slug" render={({ field }) => (
+                    <FormItem><FormLabel>Slug</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                    )} />
+                    <FormField control={form.control} name="excerpt" render={({ field }) => (
+                        <FormItem><FormLabel>Excerpt</FormLabel><FormControl><Textarea {...field} /></FormControl><FormMessage /></FormItem>
+                    )} />
+                    <FormField control={form.control} name="content" render={({ field }) => (
+                    <FormItem><FormLabel>Content</FormLabel><FormControl><Textarea rows={6} {...field} /></FormControl><FormMessage /></FormItem>
+                    )} />
+                    
+                    <FormField control={form.control} name="imageUrl" render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Article Image</FormLabel>
+                            <FormControl>
+                                <div className="flex items-center gap-4">
+                                     <IKUpload
+                                        fileName="article-image.jpg"
+                                        onError={onUploadError}
+                                        onSuccess={onUploadSuccess}
+                                        className="hidden"
+                                        id="article-image-upload"
+                                    />
+                                    <label htmlFor="article-image-upload" className="cursor-pointer">
+                                        <Button type="button" variant="outline" asChild>
+                                            <span><UploadCloud className="mr-2 h-4 w-4" /> Upload</span>
+                                        </Button>
+                                    </label>
+                                    <Input {...field} placeholder="Image URL will appear here" readOnly />
+                                </div>
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )} />
+                    
+                    <FormField control={form.control} name="imageHint" render={({ field }) => (
+                        <FormItem><FormLabel>Image Hint (for AI)</FormLabel><FormControl><Input {...field} placeholder="e.g. 'vintage book'"/></FormControl><FormMessage /></FormItem>
+                    )} />
+                    <Button type="submit" disabled={form.formState.isSubmitting}>
+                    {form.formState.isSubmitting ? 'Adding...' : 'Add Article'}
+                    </Button>
+                </form>
+                </Form>
+            </CardContent>
+            </Card>
+        </div>
+        <div className="lg:col-span-2">
+            <Card>
+            <CardHeader>
+                <CardTitle>Existing Articles</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <Table>
+                <TableHeader>
+                    <TableRow>
+                    <TableHead>Title</TableHead>
+                    <TableHead>Published</TableHead>
+                    <TableHead>Likes</TableHead>
+                    <TableHead>Actions</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {loading ? (
+                        <TableRow><TableCell colSpan={4}>Loading...</TableCell></TableRow>
+                    ) : (
+                        articles.map(article => (
+                            <TableRow key={article.id}>
+                                <TableCell>{article.title}</TableCell>
+                                <TableCell>{format(new Date(article.publishedAt), 'dd MMM yyyy')}</TableCell>
+                                <TableCell>{article.likes ?? 0}</TableCell>
+                                <TableCell>
+                                    <Button size="sm" onClick={() => handleIncrementLikes(article.id)}>
+                                        <ThumbsUp className="mr-2 h-4 w-4" />
+                                        Like
+                                    </Button>
+                                </TableCell>
+                            </TableRow>
+                        ))
+                    )}
+                </TableBody>
+                </Table>
+            </CardContent>
+            </Card>
+        </div>
+        </div>
+    </IKContext>
   );
 }

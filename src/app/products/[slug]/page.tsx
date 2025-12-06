@@ -12,7 +12,6 @@ import React, { useEffect, useState } from 'react';
 import { useFirestore } from '@/firebase';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import type { Product } from '@/lib/types';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function ProductDetailPage({ params }: { params: { slug: string } }) {
@@ -73,8 +72,6 @@ export default function ProductDetailPage({ params }: { params: { slug: string }
     notFound();
   }
 
-  const image = PlaceHolderImages.find((img) => img.id === product.imageId);
-
   const handleAddToCart = () => {
     addToCart({
       id: product.id,
@@ -83,6 +80,7 @@ export default function ProductDetailPage({ params }: { params: { slug: string }
       quantity: 1,
       slug: product.slug,
       imageId: product.imageId,
+      imageUrl: product.imageUrl,
     });
     toast({
         title: "Added to Cart",
@@ -94,14 +92,13 @@ export default function ProductDetailPage({ params }: { params: { slug: string }
     <div className="container mx-auto px-4 py-12">
       <div className="grid md:grid-cols-2 gap-12">
         <div className="aspect-[2/3] w-full max-w-md mx-auto relative shadow-xl rounded-lg overflow-hidden">
-          {image && (
+          {product.imageUrl && (
             <Image
-              src={image.imageUrl}
+              src={product.imageUrl}
               alt={product.name}
               fill
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 50vw"
-              data-ai-hint={image.imageHint}
             />
           )}
         </div>

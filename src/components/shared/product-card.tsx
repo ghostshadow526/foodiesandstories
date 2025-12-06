@@ -8,7 +8,6 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { useCart } from '@/context/cart-provider';
 import { formatCurrency } from '@/lib/utils';
 import type { Product } from '@/lib/types';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { toast } from '@/hooks/use-toast';
 
 type ProductCardProps = {
@@ -17,8 +16,7 @@ type ProductCardProps = {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const { addToCart } = useCart();
-  const image = PlaceHolderImages.find((img) => img.id === product.imageId);
-
+  
   const handleAddToCart = () => {
     addToCart({
       id: product.id,
@@ -27,6 +25,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       quantity: 1,
       slug: product.slug,
       imageId: product.imageId,
+      imageUrl: product.imageUrl,
     });
     toast({
         title: "Added to Cart",
@@ -39,14 +38,13 @@ export default function ProductCard({ product }: ProductCardProps) {
       <CardHeader className="p-0">
         <Link href={`/products/${product.slug}`}>
           <div className="aspect-[2/3] w-full relative">
-            {image && (
+            {product.imageUrl && (
               <Image
-                src={image.imageUrl}
+                src={product.imageUrl}
                 alt={product.name}
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                data-ai-hint={image.imageHint}
               />
             )}
           </div>

@@ -6,7 +6,6 @@ import { useCart } from '@/context/cart-provider';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { formatCurrency } from '@/lib/utils';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { X } from 'lucide-react';
@@ -30,13 +29,11 @@ export default function CartPage() {
             <Card>
               <CardContent className="p-0">
                 <div className="divide-y">
-                  {cart.map((item) => {
-                    const image = PlaceHolderImages.find((img) => img.id === item.imageId);
-                    return (
+                  {cart.map((item) => (
                       <div key={item.id} className="flex items-center p-4">
                         <div className="relative h-24 w-16 rounded overflow-hidden">
-                          {image && (
-                            <Image src={image.imageUrl} alt={item.name} fill className="object-cover" data-ai-hint="book cover" />
+                          {item.imageUrl && (
+                            <Image src={item.imageUrl} alt={item.name} fill className="object-cover" />
                           )}
                         </div>
                         <div className="ml-4 flex-1">
@@ -62,8 +59,8 @@ export default function CartPage() {
                           </Button>
                         </div>
                       </div>
-                    );
-                  })}
+                    )
+                  )}
                 </div>
               </CardContent>
             </Card>

@@ -9,7 +9,6 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
 import Image from 'next/image';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { useRouter } from 'next/navigation';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -44,7 +43,6 @@ export default function CheckoutPage() {
 
     const onSubmit: SubmitHandler<ShippingFormValues> = (data) => {
         console.log("Order placed:", data);
-        // Here you would typically process the payment and create an order
         clearCart();
         alert('Thank you for your order! (This is a demo)');
         router.push('/');
@@ -155,13 +153,11 @@ export default function CheckoutPage() {
                         </CardHeader>
                         <CardContent>
                             <div className="space-y-4">
-                                {cart.map((item) => {
-                                    const image = PlaceHolderImages.find((img) => img.id === item.imageId);
-                                    return (
+                                {cart.map((item) => (
                                         <div key={item.id} className="flex items-center justify-between">
                                             <div className="flex items-center gap-4">
                                                 <div className="relative h-16 w-12 rounded overflow-hidden">
-                                                    {image && <Image src={image.imageUrl} alt={item.name} fill className="object-cover" data-ai-hint="book cover"/>}
+                                                    {item.imageUrl && <Image src={item.imageUrl} alt={item.name} fill className="object-cover"/>}
                                                 </div>
                                                 <div>
                                                     <p className="font-semibold">{item.name}</p>
@@ -171,7 +167,7 @@ export default function CheckoutPage() {
                                             <p>{formatCurrency(item.price * item.quantity)}</p>
                                         </div>
                                     )
-                                })}
+                                )}
                             </div>
                             <Separator className="my-4" />
                             <div className="flex justify-between font-bold text-lg">

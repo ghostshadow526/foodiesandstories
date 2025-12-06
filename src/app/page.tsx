@@ -37,7 +37,6 @@ export default function Home() {
     const fetchHomePageData = async () => {
       setLoading(true);
       try {
-        // Fetch New Arrivals (latest 8 products)
         const productsRef = collection(firestore, 'products');
         const newArrivalsQuery = query(productsRef, orderBy('name', 'desc'), limit(8));
         const newArrivalsSnapshot = await getDocs(newArrivalsQuery);
@@ -46,7 +45,6 @@ export default function Home() {
         setFeaturedProducts(newArrivalsData.slice(4, 8));
 
 
-        // Fetch Journal Entries (latest 3 articles)
         const articlesRef = collection(firestore, 'articles');
         const articlesQuery = query(articlesRef, orderBy('publishedAt', 'desc'), limit(3));
         const articlesSnapshot = await getDocs(articlesQuery);
@@ -146,20 +144,18 @@ export default function Home() {
              ))
           ) : (
             featuredProducts.map((product, index) => {
-              const image = PlaceHolderImages.find((img) => img.id === product.imageId);
               const isOdd = index % 2 !== 0;
               return (
                 <div key={product.id} className="grid md:grid-cols-2 gap-12 items-center animate-fade-in-up">
                   <div className={cn("relative aspect-[2/3] w-full max-w-sm mx-auto shadow-xl rounded-lg overflow-hidden transition-transform duration-500 hover:scale-105", isOdd && "md:order-last")}>
-                      {image && (
+                      {product.imageUrl && (
                         <Link href={`/products/${product.slug}`}>
                           <Image
-                          src={image.imageUrl}
+                          src={product.imageUrl}
                           alt={product.name}
                           fill
                           className="object-cover"
                           sizes="(max-width: 768px) 100vw, 50vw"
-                          data-ai-hint={image.imageHint}
                           />
                         </Link>
                       )}

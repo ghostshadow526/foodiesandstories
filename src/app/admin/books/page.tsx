@@ -16,6 +16,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import type { Product } from '@/lib/types';
 import { formatCurrency } from '@/lib/utils';
+import { IKContext, IKUpload } from 'imagekit-javascript/react';
+import { UploadCloud } from 'lucide-react';
 
 const bookSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -25,6 +27,7 @@ const bookSchema = z.object({
   price: z.coerce.number().min(0, 'Price must be positive'),
   category: z.string().min(1, 'Category is required'),
   imageId: z.string().min(1, 'Image ID is required'),
+  imageUrl: z.string().url('A valid image URL is required'),
 });
 
 type BookFormValues = z.infer<typeof bookSchema>;
@@ -44,9 +47,15 @@ export default function AdminBooksPage() {
       description: '',
       price: 0,
       category: '',
-      imageId: '',
+      imageId: 'book-cover-1',
+      imageUrl: '',
     },
   });
+
+  const authenticator = async () => {
+    const response = await fetch('/api/imagekit/auth');
+    return await response.json();
+  };
 
   const fetchBooks = async () => {
     if (!firestore) return;
@@ -80,7 +89,25 @@ export default function AdminBooksPage() {
     }
   };
 
+  const onUploadError = (err: any) => {
+    console.error("Upload error:", err);
+    toast({ variant: 'destructive', title: 'Upload Failed', description: 'There was an error uploading the image.' });
+  };
+
+  const onUploadSuccess = (res: any) => {
+    form.setValue('imageUrl', res.url);
+    // You might want to generate a more unique ID or use the one from ImageKit
+    form.setValue('imageId', res.fileId); 
+    toast({ title: 'Upload Success', description: 'Image has been uploaded and URL is set.' });
+  };
+
+
   return (
+    <IKContext
+        urlEndpoint={process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT}
+        publicKey={process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY}
+        authenticator={authenticator}
+    >
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <div className="lg:col-span-1">
         <Card>
@@ -108,8 +135,31 @@ export default function AdminBooksPage() {
                 <FormField control={form.control} name="category" render={({ field }) => (
                     <FormItem><FormLabel>Category</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
                 )} />
+                <FormField control={form.control} name="imageUrl" render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Book Cover Image</FormLabel>
+                        <FormControl>
+                            <div className="flex items-center gap-4">
+                                <IKUpload
+                                    fileName="book-cover.jpg"
+                                    onError={onUploadError}
+                                    onSuccess={onUploadSuccess}
+                                    className="hidden"
+                                    id="book-image-upload"
+                                />
+                                <label htmlFor="book-image-upload" className="cursor-pointer">
+                                    <Button type="button" variant="outline" asChild>
+                                        <span><UploadCloud className="mr-2 h-4 w-4" /> Upload</span>
+                                    </Button>
+                                </label>
+                                <Input {...field} placeholder="Image URL will appear here" readOnly />
+                            </div>
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )} />
                  <FormField control={form.control} name="imageId" render={({ field }) => (
-                    <FormItem><FormLabel>Image ID</FormLabel><FormControl><Input {...field} placeholder="e.g. 'book-cover-1'"/></FormControl><FormMessage /></FormItem>
+                    <FormItem className='hidden'><FormLabel>Image ID</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
                 )} />
                 <Button type="submit" disabled={form.formState.isSubmitting}>
                   {form.formState.isSubmitting ? 'Adding...' : 'Add Book'}
@@ -151,5 +201,6 @@ export default function AdminBooksPage() {
         </Card>
       </div>
     </div>
+    </IKContext>
   );
 }

@@ -9,6 +9,7 @@ export type Product = {
   author: string;
   category: string;
   imageId: string;
+  imageUrl: string;
 };
 
 export type CartItem = {
@@ -18,6 +19,7 @@ export type CartItem = {
   quantity: number;
   slug: string;
   imageId: string;
+  imageUrl: string;
 };
 
 export type Order = {
