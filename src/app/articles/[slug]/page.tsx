@@ -13,7 +13,6 @@ import { ThumbsUp, Eye } from 'lucide-react';
 import { format } from 'date-fns';
 
 export default function ArticleDetailPage({ params }: { params: { slug: string } }) {
-  const slug = params.slug;
   const firestore = useFirestore();
   const [article, setArticle] = useState<Article | null>(null);
   const [loading, setLoading] = useState(true);
@@ -23,7 +22,7 @@ export default function ArticleDetailPage({ params }: { params: { slug: string }
       if (!firestore) return;
       setLoading(true);
       try {
-        const q = query(collection(firestore, 'articles'), where('slug', '==', slug));
+        const q = query(collection(firestore, 'articles'), where('slug', '==', params.slug));
         const querySnapshot = await getDocs(q);
         if (querySnapshot.empty) {
           setArticle(null);
@@ -41,7 +40,7 @@ export default function ArticleDetailPage({ params }: { params: { slug: string }
       }
     };
     fetchArticle();
-  }, [firestore, slug]);
+  }, [firestore, params.slug]);
 
   const handleLike = async () => {
     if (!firestore || !article) return;

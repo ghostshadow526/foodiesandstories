@@ -15,7 +15,6 @@ import type { Product } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function ProductDetailPage({ params }: { params: { slug: string } }) {
-  const slug = params.slug;
   const firestore = useFirestore();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
@@ -27,7 +26,7 @@ export default function ProductDetailPage({ params }: { params: { slug: string }
       if (!firestore) return;
       setLoading(true);
       try {
-        const q = query(collection(firestore, 'products'), where('slug', '==', slug));
+        const q = query(collection(firestore, 'products'), where('slug', '==', params.slug));
         const querySnapshot = await getDocs(q);
         if (querySnapshot.empty) {
           setProduct(null);
@@ -45,7 +44,7 @@ export default function ProductDetailPage({ params }: { params: { slug: string }
       }
     };
     fetchProduct();
-  }, [firestore, slug]);
+  }, [firestore, params.slug]);
 
 
   if (loading) {
