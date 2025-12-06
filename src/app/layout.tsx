@@ -13,7 +13,7 @@ import { usePathname } from 'next/navigation';
 // This is a workaround to make Metadata work in a client component
 // We can't move the layout to a server component because of the providers
 // export const metadata: Metadata = {
-//   title: 'ICESTORES',
+//   title: 'ICESTORIES',
 //   description: 'A luxurious online bookstore for premium books and articles.',
 // };
 
@@ -29,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <title>ICESTORES</title>
+        <title>ICESTORIES</title>
         <meta name="description" content="A luxurious online bookstore for premium books and articles." />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />

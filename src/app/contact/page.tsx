@@ -21,7 +21,7 @@ export default function ContactPage() {
                 <div>
                     <h3 className="font-headline text-xl font-semibold">Email</h3>
                     <p className="text-muted-foreground">For general inquiries and support.</p>
-                    <a href="mailto:support@icestores.com" className="text-primary hover:underline">support@icestores.com</a>
+                    <a href="mailto:support@icestories.com" className="text-primary hover:underline">support@icestories.com</a>
                 </div>
             </div>
              <div className="flex items-start gap-4">
