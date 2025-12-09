@@ -1,38 +1,37 @@
 import Image from 'next/image';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 export default function AboutPage() {
-  const aboutImage = PlaceHolderImages.find(img => img.id === 'about-us-image');
-
+  
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="text-center mb-12">
-        <h1 className="font-headline text-4xl md:text-5xl font-bold">About ICESTORIES</h1>
-        <p className="mt-2 text-lg text-muted-foreground">The intersection of literary art and curated excellence.</p>
+        <h1 className="font-headline text-4xl md:text-5xl font-bold">About the Visionary</h1>
+        <p className="mt-2 text-lg text-muted-foreground">The story behind ICESTORIES and its founder.</p>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-12 items-center">
-        <div className="prose prose-lg max-w-none text-foreground">
-          <p>
-            Welcome to <strong>ICESTORIES</strong>, your premier destination for curated literary works and exclusive articles. Founded on the principle that reading is a luxurious experience, we dedicate ourselves to sourcing books that are not just stories, but treasures. Our collection is a testament to the power of the written word, featuring timeless classics, groundbreaking contemporary fiction, and profound non-fiction.
+      <div className="grid md:grid-cols-5 gap-12 items-center">
+        <div className="md:col-span-3 prose prose-lg max-w-none text-foreground">
+          <p className="lead">
+            At the heart of ICESTORIES is a singular vision, a profound passion for literature, and an unrelenting drive for excellence, all embodied by its founder, <strong>Emenike Charles Ifunanya</strong>.
           </p>
           <p>
-            Our mission is to connect discerning readers with extraordinary literature. We believe in the transformative power of books to inspire, challenge, and enlighten. Every title on our virtual shelves has been handpicked by our team of passionate bibliophiles, ensuring a catalog of unparalleled quality and significance.
+            Emenike is not just an entrepreneur; he is a lifelong bibliophile, a connoisseur of stories, and a firm believer in the transformative power of the written word. His journey began with the simple act of reading, but quickly blossomed into a deep appreciation for the art of storytelling and the craft of book-making. He envisioned a space where literature was not merely sold, but celebrated. A sanctuary for readers who, like him, seek more than just a story—they seek an experience.
           </p>
           <p>
-            At ICESTORIES, we offer more than just books; we offer an entry into a world of intellectual and aesthetic delight. We are committed to providing a seamless and elegant shopping experience, from discovery to delivery. Join our community of readers and embark on a journey through the finest pages ever written.
+            With a discerning eye and an unyielding commitment to quality, Emenike personally curates the collection at ICESTORIES. He travels, he researches, and he connects with publishers and authors to source books that are not just bestsellers, but timeless treasures. His philosophy is simple: every book on our shelves must be a work of art, capable of inspiring, challenging, and moving the reader.
+          </p>
+          <p>
+            Emenike Charles Ifunanya's passion is the bedrock of ICESTORIES. It is his dedication that shapes our identity and his vision that guides our mission. This store is more than a business; it's the realization of a dream to build a community around the shared love of extraordinary literature. When you shop at ICESTORIES, you are not just buying a book; you are becoming part of Emenike's world, a world where every story matters and every reader is cherished.
           </p>
         </div>
-        <div className="aspect-video w-full relative rounded-lg overflow-hidden shadow-xl">
-            {aboutImage && (
-                <Image 
-                    src={aboutImage.imageUrl} 
-                    alt={aboutImage.description} 
-                    fill 
-                    className="object-cover" 
-                    data-ai-hint={aboutImage.imageHint}
-                />
-            )}
+        <div className="md:col-span-2 aspect-square w-full relative rounded-lg overflow-hidden shadow-xl">
+            <Image 
+                src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxwb3J0cmFpdCUyMG9mJTIwYSUyMG1hbnxlbnwwfHx8fDE3NjQ2MjI3NzF8MA&ixlib=rb-4.1.0&q=80&w=1080"
+                alt="Emenike Charles Ifunanya" 
+                fill 
+                className="object-cover" 
+                data-ai-hint="portrait man"
+            />
         </div>
       </div>
     </div>

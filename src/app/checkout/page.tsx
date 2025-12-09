@@ -2,10 +2,9 @@
 
 import { useCart } from '@/context/cart-provider';
 import { formatCurrency } from '@/lib/utils';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -14,6 +13,9 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { useFirestore } from '@/firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { useToast } from '@/hooks/use-toast';
 
 const shippingSchema = z.object({
     name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -29,6 +31,8 @@ type ShippingFormValues = z.infer<typeof shippingSchema>;
 export default function CheckoutPage() {
     const { cart, cartTotal, clearCart } = useCart();
     const router = useRouter();
+    const firestore = useFirestore();
+    const { toast } = useToast();
 
     const form = useForm<ShippingFormValues>({
         resolver: zodResolver(shippingSchema),
@@ -36,16 +40,50 @@ export default function CheckoutPage() {
             name: '',
             email: '',
             address: '',
-            city: '',
+            city: 'Lagos',
             country: 'Nigeria',
         }
     });
 
-    const onSubmit: SubmitHandler<ShippingFormValues> = (data) => {
-        console.log("Order placed:", data);
-        clearCart();
-        alert('Thank you for your order! (This is a demo)');
-        router.push('/');
+    const onSubmit: SubmitHandler<ShippingFormValues> = async (data) => {
+        if (!firestore) {
+            toast({
+                variant: 'destructive',
+                title: 'Error',
+                description: 'Could not connect to the database. Please try again later.'
+            });
+            return;
+        }
+
+        const orderData = {
+            ...data,
+            items: cart.map(item => ({
+                id: item.id,
+                name: item.name,
+                price: item.price,
+                quantity: item.quantity,
+            })),
+            total: cartTotal,
+            status: 'Pending',
+            createdAt: serverTimestamp()
+        };
+
+        try {
+            await addDoc(collection(firestore, 'orders'), orderData);
+            clearCart();
+            toast({
+                title: 'Order Placed!',
+                description: "Thank you for your order. We will process it shortly.",
+            });
+            router.push('/');
+        } catch (error) {
+            console.error("Error creating order:", error);
+            toast({
+                variant: 'destructive',
+                title: 'Order Failed',
+                description: 'There was a problem placing your order. Please try again.'
+            })
+        }
     };
 
     if (cart.length === 0) {
@@ -63,90 +101,56 @@ export default function CheckoutPage() {
     return (
         <div className="container mx-auto px-4 py-12">
             <h1 className="font-headline text-4xl md:text-5xl font-bold mb-8 text-center">Checkout</h1>
-            <div className="grid md:grid-cols-2 gap-12">
+            <div className="grid lg:grid-cols-2 gap-12">
                 <div>
-                    <Card>
+                    <Card className="mb-8">
                         <CardHeader>
                             <CardTitle className='font-headline text-2xl'>Shipping Information</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <Form {...form}>
-                                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                                    <FormField
-                                        control={form.control}
-                                        name="name"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>Full Name</FormLabel>
-                                                <FormControl>
-                                                    <Input placeholder="Full Name" {...field} />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                     <FormField
-                                        control={form.control}
-                                        name="email"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>Email</FormLabel>
-                                                <FormControl>
-                                                    <Input placeholder="you@example.com" {...field} />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                    <FormField
-                                        control={form.control}
-                                        name="address"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>Address</FormLabel>
-                                                <FormControl>
-                                                    <Input placeholder="123 Luxury Avenue" {...field} />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
+                                <form id="shipping-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                                    <FormField control={form.control} name="name" render={({ field }) => (
+                                        <FormItem><FormLabel>Full Name</FormLabel><FormControl><Input placeholder="Full Name" {...field} /></FormControl><FormMessage /></FormItem>
+                                    )} />
+                                     <FormField control={form.control} name="email" render={({ field }) => (
+                                        <FormItem><FormLabel>Email</FormLabel><FormControl><Input placeholder="you@example.com" {...field} /></FormControl><FormMessage /></FormItem>
+                                    )} />
+                                    <FormField control={form.control} name="address" render={({ field }) => (
+                                        <FormItem><FormLabel>Address</FormLabel><FormControl><Input placeholder="123 Luxury Avenue" {...field} /></FormControl><FormMessage /></FormItem>
+                                    )} />
                                     <div className="grid grid-cols-2 gap-4">
-                                        <FormField
-                                            control={form.control}
-                                            name="city"
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel>City</FormLabel>
-                                                    <FormControl>
-                                                        <Input placeholder="Lagos" {...field} />
-                                                    </FormControl>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                        <FormField
-                                            control={form.control}
-                                            name="country"
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel>Country</FormLabel>
-                                                    <FormControl>
-                                                        <Input placeholder="Nigeria" {...field} />
-                                                    </FormControl>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
+                                        <FormField control={form.control} name="city" render={({ field }) => (
+                                            <FormItem><FormLabel>City</FormLabel><FormControl><Input placeholder="Lagos" {...field} /></FormControl><FormMessage /></FormItem>
+                                        )} />
+                                        <FormField control={form.control} name="country" render={({ field }) => (
+                                            <FormItem><FormLabel>Country</FormLabel><FormControl><Input placeholder="Nigeria" {...field} /></FormControl><FormMessage /></FormItem>
+                                        )} />
                                     </div>
-
-                                    <Button type="submit" className="w-full mt-6" size="lg">Place Order</Button>
                                 </form>
                             </Form>
                         </CardContent>
                     </Card>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className='font-headline text-2xl'>Payment Information</CardTitle>
+                             <CardDescription>
+                                Please make a bank transfer to the account below to complete your order.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                           <div className="text-lg space-y-2 rounded-md border p-4">
+                                <p><strong>Account Name:</strong> EMENIKE Charles IFUNANYA</p>
+                                <p><strong>Account Number:</strong> 1120172302</p>
+                                <p><strong>Bank:</strong> Polaris Bank</p>
+                           </div>
+                           <p className="text-sm text-muted-foreground">
+                                After payment, please click "Place Order". We will confirm your payment and process your order.
+                           </p>
+                        </CardContent>
+                    </Card>
                 </div>
-                <div>
+                <div className="sticky top-24">
                     <Card>
                         <CardHeader>
                             <CardTitle className='font-headline text-2xl'>Order Summary</CardTitle>
@@ -176,6 +180,9 @@ export default function CheckoutPage() {
                             </div>
                         </CardContent>
                     </Card>
+                     <Button type="submit" form="shipping-form" className="w-full mt-6" size="lg" disabled={form.formState.isSubmitting}>
+                        {form.formState.isSubmitting ? 'Placing Order...' : 'Place Order'}
+                    </Button>
                 </div>
             </div>
         </div>

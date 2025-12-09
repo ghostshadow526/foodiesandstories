@@ -76,6 +76,75 @@
         "author",
         "publishedAt"
       ]
+    },
+    "order": {
+      "title": "Order",
+      "description": "A customer order containing shipping details and items purchased.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string",
+          "format": "email"
+        },
+        "address": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "price": {
+                "type": "number"
+              },
+              "quantity": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        "total": {
+          "type": "number"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "Pending",
+            "Paid",
+            "Shipped",
+            "Delivered",
+            "Cancelled"
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "email",
+        "address",
+        "items",
+        "total",
+        "createdAt",
+        "status"
+      ]
     }
   },
   "auth": {
@@ -95,6 +164,12 @@
         "$ref": "#/backend/entities/article"
       },
       "description": "Stores all the articles for the blog."
+    },
+    "/orders/{orderId}": {
+      "schema": {
+        "$ref": "#/backend/entities/order"
+      },
+      "description": "Stores customer orders."
     }
   }
 }

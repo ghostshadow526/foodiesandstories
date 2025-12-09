@@ -2,7 +2,7 @@
 'use client';
 
 import Link from 'next/link';
-import { BookOpen, ShoppingCart, User, Menu, X, Newspaper, LogOut, Shield } from 'lucide-react';
+import { BookOpen, ShoppingCart, User, Menu, X, Newspaper, LogOut, Shield, Package } from 'lucide-react';
 import { useState } from 'react';
 import { signOut, type User as FirebaseUser } from 'firebase/auth';
 
@@ -77,14 +77,14 @@ function UserNav({user}: {user: (FirebaseUser & { isAdmin?: boolean }) | null}) 
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {user.isAdmin && (
-            <DropdownMenuItem asChild>
-                <Link href="/admin">
-                    <Shield className="mr-2 h-4 w-4" />
-                    <span>Admin Panel</span>
-                </Link>
-            </DropdownMenuItem>
-        )}
+        
+        <DropdownMenuItem asChild>
+            <Link href="/admin">
+                <Shield className="mr-2 h-4 w-4" />
+                <span>Admin Panel</span>
+            </Link>
+        </DropdownMenuItem>
+        
         <DropdownMenuItem onClick={handleSignOut}>
           <LogOut className="mr-2 h-4 w-4" />
           <span>Log out</span>

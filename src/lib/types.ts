@@ -24,18 +24,23 @@ export type CartItem = {
 
 export type Order = {
     id: string;
-    userId: string;
-    items: CartItem[];
+    name: string;
+    email: string;
+    address: string;
+    city: string;
+    country: string;
+    items: {
+        id: string;
+        name: string;
+        price: number;
+        quantity: number;
+    }[];
     total: number;
-    status: 'Pending' | 'Processing' | 'Shipped' | 'Delivered' | 'Cancelled';
-    paymentReceiptUrl?: string;
-    receiptAnalysis?: {
-        isCompliant: boolean;
-        violations: string[];
-        confidenceScore: number;
-    };
-    createdAt: Date;
-    userName: string;
+    createdAt: {
+        seconds: number;
+        nanoseconds: number;
+    } | Date;
+    status: 'Pending' | 'Paid' | 'Shipped' | 'Delivered' | 'Cancelled';
 };
 
 export type User = {

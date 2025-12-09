@@ -7,7 +7,7 @@ import { useUser } from '@/firebase';
 import { Skeleton } from '@/components/ui/skeleton';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Book, Newspaper, LogOut } from 'lucide-react';
+import { Book, Newspaper, LogOut, Package } from 'lucide-react';
 import Logo from '@/components/shared/logo';
 import { useAuth } from '@/firebase';
 import { signOut } from 'firebase/auth';
@@ -31,6 +31,9 @@ function AdminSidebar() {
             </div>
             <nav className="flex-1 p-4 space-y-2">
                 <Button variant="ghost" className="w-full justify-start" asChild>
+                    <Link href="/admin/orders"><Package className="mr-2 h-4 w-4" /> Orders</Link>
+                </Button>
+                <Button variant="ghost" className="w-full justify-start" asChild>
                     <Link href="/admin/books"><Book className="mr-2 h-4 w-4" /> Books</Link>
                 </Button>
                 <Button variant="ghost" className="w-full justify-start" asChild>
@@ -53,14 +56,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const router = useRouter();
 
   useEffect(() => {
-    // This effect handles the redirection once the loading is complete.
     if (!loading && !user) {
       router.push('/login');
     }
   }, [user, loading, router]);
 
-  // While loading, show a skeleton screen.
-  // This prevents the redirect from happening prematurely.
   if (loading || !user) {
     return (
       <div className="flex h-screen w-screen items-center justify-center">
@@ -74,8 +74,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     );
   }
 
-  // After loading, if the user is confirmed to be an admin, render the layout.
-  // The useEffect above will handle non-admin users.
   if (user) {
     return (
       <div className="flex">
@@ -87,8 +85,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     );
   }
 
-  // This is a fallback for the brief moment after loading but before the redirect effect runs.
-  // It can also show a loading screen.
   return (
      <div className="flex h-screen w-screen items-center justify-center">
         <div className="flex items-center space-x-2">
