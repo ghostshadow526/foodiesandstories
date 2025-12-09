@@ -12,6 +12,8 @@ import { formatCurrency } from '@/lib/utils';
 import { format } from 'date-fns';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Eye } from 'lucide-react';
 
 export default function AdminOrdersPage() {
   const firestore = useFirestore();
@@ -74,6 +76,7 @@ export default function AdminOrdersPage() {
     if (timestamp instanceof Date) {
         return format(timestamp, 'dd MMM yyyy, p');
     }
+    // Firestore timestamp
     if (typeof timestamp === 'object' && 'seconds' in timestamp) {
         const date = new Date(timestamp.seconds * 1000);
         return format(date, 'dd MMM yyyy, p');
@@ -95,14 +98,15 @@ export default function AdminOrdersPage() {
               <TableHead>Date</TableHead>
               <TableHead>Total</TableHead>
               <TableHead>Items</TableHead>
+              <TableHead>Receipt</TableHead>
               <TableHead>Status</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {loading ? (
-              <TableRow><TableCell colSpan={6} className="text-center">Loading orders...</TableCell></TableRow>
+              <TableRow><TableCell colSpan={7} className="text-center">Loading orders...</TableCell></TableRow>
             ) : orders.length === 0 ? (
-                 <TableRow><TableCell colSpan={6} className="text-center">No orders found.</TableCell></TableRow>
+                 <TableRow><TableCell colSpan={7} className="text-center">No orders found.</TableCell></TableRow>
             ) : (
               orders.map(order => (
                 <TableRow key={order.id}>
@@ -115,6 +119,17 @@ export default function AdminOrdersPage() {
                   <TableCell>{formatDate(order.createdAt)}</TableCell>
                   <TableCell>{formatCurrency(order.total)}</TableCell>
                   <TableCell>{order.items.reduce((acc, item) => acc + item.quantity, 0)}</TableCell>
+                  <TableCell>
+                    {order.receiptImageUrl ? (
+                        <Button variant="outline" size="sm" asChild>
+                            <a href={order.receiptImageUrl} target="_blank" rel="noopener noreferrer">
+                                <Eye className="mr-2 h-4 w-4"/> View
+                            </a>
+                        </Button>
+                    ) : (
+                        <span className="text-muted-foreground">N/A</span>
+                    )}
+                  </TableCell>
                   <TableCell>
                     <Select
                       value={order.status}

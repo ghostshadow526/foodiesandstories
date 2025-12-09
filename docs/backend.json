@@ -134,6 +134,11 @@
             "Delivered",
             "Cancelled"
           ]
+        },
+        "receiptImageUrl": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL of the uploaded payment receipt image."
         }
       },
       "required": [
@@ -143,7 +148,8 @@
         "items",
         "total",
         "createdAt",
-        "status"
+        "status",
+        "receiptImageUrl"
       ]
     }
   },
