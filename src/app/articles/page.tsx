@@ -5,10 +5,11 @@ import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useFirestore } from '@/firebase';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, orderBy, query } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import type { Article } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
+import { format } from 'date-fns';
 
 export default function ArticlesPage() {
   const firestore = useFirestore();
@@ -19,7 +20,8 @@ export default function ArticlesPage() {
     const fetchArticles = async () => {
       if (!firestore) return;
       try {
-        const querySnapshot = await getDocs(collection(firestore, "articles"));
+        const q = query(collection(firestore, "articles"), orderBy("publishedAt", "desc"));
+        const querySnapshot = await getDocs(q);
         const articlesData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Article));
         setArticles(articlesData);
       } catch (error) {
@@ -71,7 +73,7 @@ export default function ArticlesPage() {
                 </div>
               </Link>
               <CardContent className="p-6">
-                <p className="text-sm text-muted-foreground mb-2">{article.publishedAt} &bull; by {article.author}</p>
+                <p className="text-sm text-muted-foreground mb-2">{format(new Date(article.publishedAt), 'dd MMM yyyy')} &bull; by {article.author}</p>
                 <h2 className="font-headline text-2xl font-semibold mb-3 leading-tight">
                   <Link href={`/articles/${article.slug}`} className="hover:text-primary transition-colors">
                     {article.title}
