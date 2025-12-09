@@ -97,7 +97,7 @@ export default function AdminBooksPage() {
     if(firestore){
       fetchBooks();
     }
-  }, [firestore]);
+  }, [firestore, toast]);
 
   const onSubmit = async (data: BookFormValues) => {
     if (!firestore) return;
