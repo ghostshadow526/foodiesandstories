@@ -15,7 +15,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useFirestore } from '@/firebase';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 import { IKContext, IKUpload } from 'imagekitio-react';
 import { UploadCloud } from 'lucide-react';
@@ -94,7 +94,7 @@ export default function CheckoutPage() {
             })),
             total: cartTotal,
             status: 'Pending',
-            createdAt: serverTimestamp()
+            createdAt: new Date()
         };
 
         try {
@@ -136,75 +136,77 @@ export default function CheckoutPage() {
             <div className="container mx-auto px-4 py-12">
                 <h1 className="font-headline text-4xl md:text-5xl font-bold mb-8 text-center">Checkout</h1>
                 <div className="grid lg:grid-cols-2 gap-12">
-                     <Form {...form}>
-                        <form id="shipping-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                            <Card>
-                                <CardHeader>
-                                    <CardTitle className='font-headline text-2xl'>Shipping Information</CardTitle>
-                                </CardHeader>
-                                <CardContent className="space-y-4">
-                                    <FormField control={form.control} name="name" render={({ field }) => (
-                                        <FormItem><FormLabel>Full Name</FormLabel><FormControl><Input placeholder="Full Name" {...field} /></FormControl><FormMessage /></FormItem>
-                                    )} />
-                                    <FormField control={form.control} name="email" render={({ field }) => (
-                                        <FormItem><FormLabel>Email</FormLabel><FormControl><Input placeholder="you@example.com" {...field} /></FormControl><FormMessage /></FormItem>
-                                    )} />
-                                    <FormField control={form.control} name="address" render={({ field }) => (
-                                        <FormItem><FormLabel>Address</FormLabel><FormControl><Input placeholder="123 Luxury Avenue" {...field} /></FormControl><FormMessage /></FormItem>
-                                    )} />
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <FormField control={form.control} name="city" render={({ field }) => (
-                                            <FormItem><FormLabel>City</FormLabel><FormControl><Input placeholder="Lagos" {...field} /></FormControl><FormMessage /></FormItem>
+                    <div className="space-y-8">
+                         <Form {...form}>
+                            <form id="shipping-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                                <Card>
+                                    <CardHeader>
+                                        <CardTitle className='font-headline text-2xl'>Shipping Information</CardTitle>
+                                    </CardHeader>
+                                    <CardContent className="space-y-4">
+                                        <FormField control={form.control} name="name" render={({ field }) => (
+                                            <FormItem><FormLabel>Full Name</FormLabel><FormControl><Input placeholder="Full Name" {...field} /></FormControl><FormMessage /></FormItem>
                                         )} />
-                                        <FormField control={form.control} name="country" render={({ field }) => (
-                                            <FormItem><FormLabel>Country</FormLabel><FormControl><Input placeholder="Nigeria" {...field} /></FormControl><FormMessage /></FormItem>
+                                        <FormField control={form.control} name="email" render={({ field }) => (
+                                            <FormItem><FormLabel>Email</FormLabel><FormControl><Input placeholder="you@example.com" {...field} /></FormControl><FormMessage /></FormItem>
                                         )} />
+                                        <FormField control={form.control} name="address" render={({ field }) => (
+                                            <FormItem><FormLabel>Address</FormLabel><FormControl><Input placeholder="123 Luxury Avenue" {...field} /></FormControl><FormMessage /></FormItem>
+                                        )} />
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <FormField control={form.control} name="city" render={({ field }) => (
+                                                <FormItem><FormLabel>City</FormLabel><FormControl><Input placeholder="Lagos" {...field} /></FormControl><FormMessage /></FormItem>
+                                            )} />
+                                            <FormField control={form.control} name="country" render={({ field }) => (
+                                                <FormItem><FormLabel>Country</FormLabel><FormControl><Input placeholder="Nigeria" {...field} /></FormControl><FormMessage /></FormItem>
+                                            )} />
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                                <Card>
+                                    <CardHeader>
+                                        <CardTitle className='font-headline text-2xl'>Payment Information</CardTitle>
+                                        <CardDescription>
+                                            Please make a bank transfer to the account below, then upload your receipt to complete the order.
+                                        </CardDescription>
+                                    </CardHeader>
+                                    <CardContent className="space-y-4">
+                                    <div className="text-lg space-y-2 rounded-md border p-4">
+                                            <p><strong>Account Name:</strong> EMENIKE Charles IFUNANYA</p>
+                                            <p><strong>Account Number:</strong> 1120172302</p>
+                                            <p><strong>Bank:</strong> Polaris Bank</p>
                                     </div>
-                                </CardContent>
-                            </Card>
-                            <Card>
-                                <CardHeader>
-                                    <CardTitle className='font-headline text-2xl'>Payment Information</CardTitle>
-                                    <CardDescription>
-                                        Please make a bank transfer to the account below, then upload your receipt to complete the order.
-                                    </CardDescription>
-                                </CardHeader>
-                                <CardContent className="space-y-4">
-                                <div className="text-lg space-y-2 rounded-md border p-4">
-                                        <p><strong>Account Name:</strong> EMENIKE Charles IFUNANYA</p>
-                                        <p><strong>Account Number:</strong> 1120172302</p>
-                                        <p><strong>Bank:</strong> Polaris Bank</p>
-                                </div>
-                                <FormField control={form.control} name="receiptImageUrl" render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Proof of Payment</FormLabel>
-                                        <FormControl>
-                                            <div className="flex items-center gap-4">
-                                                <label className="cursor-pointer">
-                                                    <Button type="button" variant="outline" asChild>
-                                                        <span><UploadCloud className="mr-2 h-4 w-4" /> Upload Receipt</span>
-                                                    </Button>
-                                                    <IKUpload
-                                                        fileName="receipt.jpg"
-                                                        onError={onUploadError}
-                                                        onSuccess={onUploadSuccess}
-                                                        useUniqueFileName={true}
-                                                        className="hidden"
-                                                    />
-                                                </label>
-                                                <Input {...field} placeholder="Receipt URL will appear here" readOnly />
-                                            </div>
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )} />
-                                <p className="text-sm text-muted-foreground">
-                                        After payment and upload, click "Place Order". We will confirm your payment and process your order.
-                                </p>
-                                </CardContent>
-                            </Card>
-                        </form>
-                    </Form>
+                                    <FormField control={form.control} name="receiptImageUrl" render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Proof of Payment</FormLabel>
+                                            <FormControl>
+                                                <div className="flex items-center gap-4">
+                                                    <label className="cursor-pointer">
+                                                        <Button type="button" variant="outline" asChild>
+                                                            <span><UploadCloud className="mr-2 h-4 w-4" /> Upload Receipt</span>
+                                                        </Button>
+                                                        <IKUpload
+                                                            fileName="receipt.jpg"
+                                                            onError={onUploadError}
+                                                            onSuccess={onUploadSuccess}
+                                                            useUniqueFileName={true}
+                                                            className="hidden"
+                                                        />
+                                                    </label>
+                                                    <Input {...field} placeholder="Receipt URL will appear here" readOnly />
+                                                </div>
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )} />
+                                    <p className="text-sm text-muted-foreground">
+                                            After payment and upload, click "Place Order". We will confirm your payment and process your order.
+                                    </p>
+                                    </CardContent>
+                                </Card>
+                            </form>
+                        </Form>
+                    </div>
                     <div className="sticky top-24">
                         <Card>
                             <CardHeader>
@@ -243,5 +245,4 @@ export default function CheckoutPage() {
             </div>
         </IKContext>
     );
-
-    
+}
