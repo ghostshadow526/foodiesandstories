@@ -38,9 +38,9 @@ const authenticator = async () => {
             const errorText = await response.text();
             throw new Error(`Request failed with status ${response.status}: ${errorText}`);
         }
-        return await response.json();
+        const data = await response.json();
+        return data;
     } catch (error) {
-        console.error("Authentication request failed:", error);
         throw new Error(`Authentication request failed: ${error instanceof Error ? error.message : String(error)}`);
     }
 };
@@ -128,8 +128,8 @@ export default function CheckoutPage() {
 
     return (
         <IKContext
-            urlEndpoint={process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT}
-            publicKey={process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY}
+            urlEndpoint={process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT!}
+            publicKey={process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY!}
             authenticator={authenticator}
         >
             <div className="container mx-auto px-4 py-12">

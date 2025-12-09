@@ -41,7 +41,7 @@ export type Order = {
         nanoseconds: number;
     } | Date;
     status: 'Pending' | 'Paid' | 'Shipped' | 'Delivered' | 'Cancelled';
-    receiptImageUrl: string;
+    receiptImageUrl?: string;
 };
 
 export type User = {

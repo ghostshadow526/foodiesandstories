@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useFirestore } from '@/firebase';
 import { collection, getDocs, doc, updateDoc, query, orderBy } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
@@ -21,7 +21,7 @@ export default function AdminOrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const fetchOrders = async () => {
+  const fetchOrders = useCallback(async () => {
     if (!firestore) return;
     setLoading(true);
     try {
@@ -35,13 +35,13 @@ export default function AdminOrdersPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [firestore, toast]);
 
   useEffect(() => {
     if (firestore) {
       fetchOrders();
     }
-  }, [firestore]);
+  }, [firestore, fetchOrders]);
 
   const handleStatusChange = async (orderId: string, newStatus: Order['status']) => {
     if (!firestore) return;
@@ -73,15 +73,9 @@ export default function AdminOrdersPage() {
 
   const formatDate = (timestamp: Order['createdAt']) => {
     if (!timestamp) return 'N/A';
-    if (timestamp instanceof Date) {
-        return format(timestamp, 'dd MMM yyyy, p');
-    }
-    // Firestore timestamp
-    if (typeof timestamp === 'object' && 'seconds' in timestamp) {
-        const date = new Date(timestamp.seconds * 1000);
-        return format(date, 'dd MMM yyyy, p');
-    }
-    return 'Invalid Date';
+    // Firestore timestamp or JS Date
+    const date = timestamp instanceof Date ? timestamp : new Date(timestamp.seconds * 1000);
+    return format(date, 'dd MMM yyyy, p');
   }
 
   return (
