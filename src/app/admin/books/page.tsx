@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useFirestore } from '@/firebase';
 import { collection, addDoc, getDocs, doc, deleteDoc } from 'firebase/firestore';
 import { useForm } from 'react-hook-form';
@@ -66,7 +66,7 @@ export default function AdminBooksPage() {
     }
   };
 
-  const fetchBooks = async () => {
+  const fetchBooks = useCallback(async () => {
     if (!firestore) return;
     setLoading(true);
     try {
@@ -79,7 +79,7 @@ export default function AdminBooksPage() {
     } finally {
       setLoading(false);
     }
-  };
+  },[firestore, toast]);
   
   const handleDeleteBook = async (bookId: string) => {
     if(!firestore) return;
@@ -97,7 +97,7 @@ export default function AdminBooksPage() {
     if(firestore){
       fetchBooks();
     }
-  }, [firestore, toast]);
+  }, [firestore, fetchBooks]);
 
   const onSubmit = async (data: BookFormValues) => {
     if (!firestore) return;

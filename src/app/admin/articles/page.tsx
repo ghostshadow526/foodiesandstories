@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useFirestore } from '@/firebase';
 import { collection, addDoc, getDocs, doc, updateDoc, increment, deleteDoc } from 'firebase/firestore';
 import { useForm } from 'react-hook-form';
@@ -65,7 +65,7 @@ export default function AdminArticlesPage() {
   };
 
 
-  const fetchArticles = async () => {
+  const fetchArticles = useCallback(async () => {
     if (!firestore) return;
     setLoading(true);
     try {
@@ -78,13 +78,13 @@ export default function AdminArticlesPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [firestore, toast]);
 
   useEffect(() => {
     if (firestore) {
       fetchArticles();
     }
-  }, [firestore]);
+  }, [firestore, fetchArticles]);
 
   const onSubmit = async (data: ArticleFormValues) => {
     if (!firestore) return;
