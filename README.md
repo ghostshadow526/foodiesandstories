@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # How to Push to Your GitHub Repository
 
 1.  **Initialize Git**:
@@ -32,3 +33,6 @@
 This is a NextJS starter in Firebase Studio.
 
 To get started, take a look at src/app/page.tsx.
+=======
+# icestores
+>>>>>>> 79713c2d2ea340f058499493f012f20473e0038e
