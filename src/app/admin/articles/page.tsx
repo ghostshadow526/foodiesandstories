@@ -31,6 +31,20 @@ const articleSchema = z.object({
 
 type ArticleFormValues = z.infer<typeof articleSchema>;
 
+const authenticator = async () => {
+    try {
+        const response = await fetch('/api/imagekit/auth');
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Request failed with status ${response.status}: ${errorText}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error("Authentication request failed:", error);
+        throw new Error(`Authentication request failed: ${error instanceof Error ? error.message : String(error)}`);
+    }
+};
+
 export default function AdminArticlesPage() {
   const firestore = useFirestore();
   const { toast } = useToast();
@@ -49,21 +63,6 @@ export default function AdminArticlesPage() {
       imageHint: '',
     },
   });
-  
-  const authenticator = async () => {
-    try {
-        const response = await fetch('/api/imagekit/auth');
-        if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`Request failed with status ${response.status}: ${errorText}`);
-        }
-        return await response.json();
-    } catch (error) {
-        console.error("Authentication request failed:", error);
-        throw new Error(`Authentication request failed: ${error instanceof Error ? error.message : String(error)}`);
-    }
-  };
-
 
   const fetchArticles = useCallback(async () => {
     if (!firestore) return;

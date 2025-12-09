@@ -32,6 +32,20 @@ const bookSchema = z.object({
 
 type BookFormValues = z.infer<typeof bookSchema>;
 
+const authenticator = async () => {
+    try {
+        const response = await fetch('/api/imagekit/auth');
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Request failed with status ${response.status}: ${errorText}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error("Authentication request failed:", error);
+        throw new Error(`Authentication request failed: ${error instanceof Error ? error.message : String(error)}`);
+    }
+};
+
 export default function AdminBooksPage() {
   const firestore = useFirestore();
   const { toast } = useToast();
@@ -51,20 +65,6 @@ export default function AdminBooksPage() {
       imageUrl: '',
     },
   });
-
-  const authenticator = async () => {
-    try {
-        const response = await fetch('/api/imagekit/auth');
-        if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`Request failed with status ${response.status}: ${errorText}`);
-        }
-        return await response.json();
-    } catch (error) {
-        console.error("Authentication request failed:", error);
-        throw new Error(`Authentication request failed: ${error instanceof Error ? error.message : String(error)}`);
-    }
-  };
 
   const fetchBooks = useCallback(async () => {
     if (!firestore) return;
