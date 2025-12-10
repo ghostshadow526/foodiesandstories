@@ -12,8 +12,8 @@ export default function Footer() {
           <nav className="flex gap-6 font-medium text-foreground/80">
             <Link href="/about" className="hover:text-foreground">About</Link>
             <Link href="/contact" className="hover:text-foreground">Contact</Link>
-            <Link href="/products" className="hover:text-foreground">Terms of Service</Link>
-            <Link href="/products" className="hover:text-foreground">Privacy Policy</Link>
+            <Link href="/terms-of-service" className="hover:text-foreground">Terms of Service</Link>
+            <Link href="/privacy-policy" className="hover:text-foreground">Privacy Policy</Link>
           </nav>
         </div>
         <div className="mt-8 border-t pt-4 text-center text-muted-foreground text-sm">
