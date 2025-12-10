@@ -165,9 +165,8 @@ export default function Home() {
               const isOdd = index % 2 !== 0;
               return (
                 <div key={product.id} className="grid md:grid-cols-2 gap-12 items-center animate-fade-in-up">
-                  <div className={cn("relative aspect-[2/3] w-full max-w-sm mx-auto shadow-xl rounded-lg overflow-hidden transition-transform duration-500 hover:scale-105", isOdd && "md:order-last")}>
+                  <Link href="/products" className={cn("relative aspect-[2/3] w-full max-w-sm mx-auto shadow-xl rounded-lg overflow-hidden transition-transform duration-500 hover:scale-105", isOdd && "md:order-last")}>
                       {product.imageUrl && (
-                        <Link href={`/products/${product.slug}`}>
                           <Image
                           src={product.imageUrl}
                           alt={product.name}
@@ -175,16 +174,15 @@ export default function Home() {
                           className="object-cover"
                           sizes="(max-width: 768px) 100vw, 50vw"
                           />
-                        </Link>
                       )}
-                  </div>
+                  </Link>
                   <div className={cn("text-center md:text-left", isOdd && "md:text-right")}>
                     <p className="text-accent font-semibold">{product.category}</p>
                     <h3 className="font-headline text-3xl font-bold mt-2">{product.name}</h3>
                     <p className="mt-4 text-muted-foreground text-lg">by {product.author}</p>
                     <p className="mt-4 text-lg line-clamp-3">{product.description}</p>
                     <Button asChild size="lg" className="mt-8">
-                        <Link href={`/products/${product.slug}`}>
+                        <Link href="/products">
                           View Book <ArrowRight className="ml-2"/>
                         </Link>
                     </Button>

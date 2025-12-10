@@ -26,7 +26,7 @@ export default function AboutPage() {
         </div>
         <div className="md:col-span-2 aspect-square w-full relative rounded-lg overflow-hidden shadow-xl">
             <Image 
-                src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxwb3J0cmFpdCUyMG9mJTIwYSUyMG1hbnxlbnwwfHx8fDE3NjQ2MjI3NzF8MA&ixlib=rb-4.1.0&q=80&w=1080"
+                src="https://raw.githubusercontent.com/ghostshadow526/boredape/main/Store.jpg"
                 alt="Emenike Charles Ifunanya" 
                 fill 
                 className="object-cover" 
