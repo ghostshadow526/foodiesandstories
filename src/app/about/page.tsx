@@ -3,7 +3,7 @@ import Image from 'next/image';
 export default function AboutPage() {
   
   return (
-    <div className="container mx-auto px-4 py-12">
+    <div className="container mx-auto px-4 py-12 animate-fade-in-up">
       <div className="text-center mb-12">
         <h1 className="font-headline text-4xl md:text-5xl font-bold">About the Visionary</h1>
         <p className="mt-2 text-lg text-muted-foreground">The story behind ICESTORIES and its founder.</p>

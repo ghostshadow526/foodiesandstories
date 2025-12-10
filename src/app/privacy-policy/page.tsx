@@ -1,7 +1,7 @@
 
 export default function PrivacyPolicyPage() {
   return (
-    <div className="container mx-auto px-4 py-12">
+    <div className="container mx-auto px-4 py-12 animate-fade-in-up">
       <div className="max-w-4xl mx-auto prose prose-lg">
         <h1 className="font-headline text-4xl md:text-5xl font-bold">Privacy Policy</h1>
         <p className="text-muted-foreground">Last updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
