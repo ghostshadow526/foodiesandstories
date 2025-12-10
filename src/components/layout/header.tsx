@@ -96,9 +96,8 @@ function UserNav({user}: {user: (FirebaseUser & { isAdmin?: boolean }) | null}) 
 
 
 export default function Header() {
-  const { cart } = useCart();
+  const { cartItemCount } = useCart();
   const { user } = useUser();
-  const cartItemCount = cart.reduce((acc, item) => acc + item.quantity, 0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const NavLinks = ({ className }: { className?: string }) => (

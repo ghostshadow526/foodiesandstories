@@ -23,6 +23,7 @@ const CartContext = createContext<{
   clearCart: () => void;
   cart: CartItem[];
   cartTotal: number;
+  cartItemCount: number;
 } | undefined>(undefined);
 
 const cartReducer = (state: CartState, action: CartAction): CartState => {
@@ -98,9 +99,10 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const clearCart = () => dispatch({ type: 'CLEAR_CART' });
 
   const cartTotal = state.cart.reduce((total, item) => total + item.price * item.quantity, 0);
+  const cartItemCount = state.cart.reduce((count, item) => count + item.quantity, 0);
 
   return (
-    <CartContext.Provider value={{ state, dispatch, addToCart, removeFromCart, updateQuantity, clearCart, cart: state.cart, cartTotal }}>
+    <CartContext.Provider value={{ state, dispatch, addToCart, removeFromCart, updateQuantity, clearCart, cart: state.cart, cartTotal, cartItemCount }}>
       {children}
     </CartContext.Provider>
   );
@@ -111,6 +113,5 @@ export const useCart = () => {
   if (context === undefined) {
     throw new Error('useCart must be used within a CartProvider');
   }
-  const { state, ...rest } = context;
-  return { ...state, ...rest };
+  return context;
 };
