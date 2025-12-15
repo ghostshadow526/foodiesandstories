@@ -10,6 +10,7 @@ export type Product = {
   category: string;
   imageId: string;
   imageUrl: string;
+  isFeatured?: boolean;
 };
 
 export type CartItem = {

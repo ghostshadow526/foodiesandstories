@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useFirestore } from '@/firebase';
-import { collection, getDocs, limit, query, orderBy } from 'firebase/firestore';
+import { collection, getDocs, limit, query, orderBy, where } from 'firebase/firestore';
 
 import { Button } from '@/components/ui/button';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
@@ -37,30 +37,20 @@ export default function Home() {
     const fetchHomePageData = async () => {
       setLoading(true);
       try {
-        // Fetch New Arrivals
         const productsRef = collection(firestore, 'products');
+
+        // Fetch New Arrivals
         const newArrivalsQuery = query(productsRef, orderBy('name', 'desc'), limit(4));
         const newArrivalsSnapshot = await getDocs(newArrivalsQuery);
         const newArrivalsData = newArrivalsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Product));
         setNewArrivals(newArrivalsData);
 
-        // Setup Featured Products with placeholders
-        const featuredPlaceholderIds = ['book-cover-5', 'book-cover-6', 'book-cover-7', 'book-cover-8'];
-        const featuredProductsData = featuredPlaceholderIds.map((id, index) => {
-            const placeholder = PlaceHolderImages.find(p => p.id === id);
-            return {
-                id: `featured-${index}`,
-                name: `Featured Book ${index + 1}`,
-                slug: `featured-book-${index + 1}`,
-                description: "A captivating tale of adventure and mystery that will keep you on the edge of your seat.",
-                price: 2999.99,
-                author: "Author Name",
-                category: "Featured",
-                imageId: placeholder?.id ?? '',
-                imageUrl: placeholder?.imageUrl ?? '',
-            };
-        });
+        // Fetch Featured Products
+        const featuredQuery = query(productsRef, where('isFeatured', '==', true), limit(4));
+        const featuredSnapshot = await getDocs(featuredQuery);
+        const featuredProductsData = featuredSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Product));
         setFeaturedProducts(featuredProductsData);
+
 
         // Fetch Journal Entries
         const articlesRef = collection(firestore, 'articles');
@@ -165,7 +155,7 @@ export default function Home() {
               const isOdd = index % 2 !== 0;
               return (
                 <div key={product.id} className="grid md:grid-cols-2 gap-12 items-center animate-fade-in-up">
-                  <Link href="/products" className={cn("relative aspect-[2/3] w-full max-w-sm mx-auto shadow-xl rounded-lg overflow-hidden transition-transform duration-500 hover:scale-105", isOdd && "md:order-last")}>
+                  <Link href={`/products/${product.slug}`} className={cn("relative aspect-[2/3] w-full max-w-sm mx-auto shadow-xl rounded-lg overflow-hidden transition-transform duration-500 hover:scale-105", isOdd && "md:order-last")}>
                       {product.imageUrl && (
                           <Image
                           src={product.imageUrl}
@@ -182,7 +172,7 @@ export default function Home() {
                     <p className="mt-4 text-muted-foreground text-lg">by {product.author}</p>
                     <p className="mt-4 text-lg line-clamp-3">{product.description}</p>
                     <Button asChild size="lg" className="mt-8">
-                        <Link href="/products">
+                        <Link href={`/products/${product.slug}`}>
                           View Book <ArrowRight className="ml-2"/>
                         </Link>
                     </Button>

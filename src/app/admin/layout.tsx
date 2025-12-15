@@ -7,7 +7,7 @@ import { useUser } from '@/firebase';
 import { Skeleton } from '@/components/ui/skeleton';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Book, Newspaper, LogOut, Package } from 'lucide-react';
+import { Book, Newspaper, LogOut, Package, Star } from 'lucide-react';
 import Logo from '@/components/shared/logo';
 import { useAuth } from '@/firebase';
 import { signOut } from 'firebase/auth';
@@ -28,6 +28,7 @@ function AdminSidebar() {
     const navItems = [
       { href: '/admin/orders', label: 'Orders', icon: Package },
       { href: '/admin/books', label: 'Books', icon: Book },
+      { href: '/admin/featured', label: 'Featured', icon: Star },
       { href: '/admin/articles', label: 'Articles', icon: Newspaper },
     ]
 
