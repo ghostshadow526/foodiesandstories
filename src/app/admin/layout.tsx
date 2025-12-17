@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect } from 'react';
@@ -13,8 +14,8 @@ import { Book, Newspaper, LogOut, Package, Star } from 'lucide-react';
 const navItems = [
   { href: '/admin/orders', label: 'Orders', icon: Package },
   { href: '/admin/books', label: 'Books', icon: Book },
-  { href: '/admin/featured', label: 'Featured', icon: Star },
   { href: '/admin/articles', label: 'Articles', icon: Newspaper },
+  { href: '/admin/featured', label: 'Featured', icon: Star },
 ];
 
 function AdminSidebar() {
@@ -32,13 +33,13 @@ function AdminSidebar() {
   return (
     <aside className="flex h-screen w-64 flex-col border-r bg-card">
       <div className="border-b p-4">
-        <Link href="/admin">
-          <Logo />
-        </Link>
+        <Logo />
       </div>
       <nav className="flex-1 space-y-2 p-4">
         {navItems.map((item) => {
-          const isActive = pathname === item.href;
+          // An admin path is active if it starts with the item's href
+          // e.g. /admin/books is active for /admin/books/all
+          const isActive = pathname.startsWith(item.href);
           return (
             <Button
               key={item.label}
@@ -74,7 +75,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     }
   }, [user, loading, router]);
 
-  if (loading) {
+  if (loading || !user) {
     return (
       <div className="flex h-screen w-screen items-center justify-center">
         <div className="flex items-center space-x-4">
@@ -88,14 +89,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     );
   }
 
-  if (user) {
-    return (
-      <div className="flex">
-        <AdminSidebar />
-        <main className="flex-1 bg-muted/40 p-8">{children}</main>
-      </div>
-    );
-  }
-
-  return null;
+  return (
+    <div className="flex">
+      <AdminSidebar />
+      <main className="flex-1 bg-muted/40 p-8">{children}</main>
+    </div>
+  );
 }
