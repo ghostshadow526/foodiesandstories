@@ -1,20 +1,6 @@
 
 import { NextResponse } from 'next/server';
-import ImageKit from 'imagekit';
-
-// Initialize imagekit inside the handler to avoid build-time errors
-// when environment variables are not present.
-function getImageKitInstance() {
-    if (!process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY || !process.env.IMAGEKIT_PRIVATE_KEY || !process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT) {
-        throw new Error("ImageKit credentials are not set in the environment variables.");
-    }
-
-    return new ImageKit({
-        publicKey: process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY!,
-        privateKey: process.env.IMAGEKIT_PRIVATE_KEY!,
-        urlEndpoint: process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT!,
-    });
-}
+import { getImageKitInstance } from '@/lib/imagekit-server';
 
 export async function GET(request: Request) {
   try {

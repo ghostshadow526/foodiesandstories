@@ -35,7 +35,7 @@ function AdminSidebar() {
     return (
         <aside className="w-64 h-screen bg-card border-r flex flex-col">
             <div className="p-4 border-b">
-                <Link href="/"><Logo /></Link>
+                <Logo />
             </div>
             <nav className="flex-1 p-4 space-y-2">
                 {navItems.map(item => {
