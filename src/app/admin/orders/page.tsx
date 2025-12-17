@@ -3,7 +3,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useFirestore } from '@/firebase';
-import { collection, getDocs, doc, updateDoc, query, orderBy } from 'firebase/firestore';
+import { collection, getDocs, doc, updateDoc, query, orderBy, deleteDoc } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -13,7 +13,18 @@ import { format } from 'date-fns';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Eye } from 'lucide-react';
+import { Eye, Trash2 } from 'lucide-react';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
 export default function AdminOrdersPage() {
   const firestore = useFirestore();
@@ -42,6 +53,18 @@ export default function AdminOrdersPage() {
       fetchOrders();
     }
   }, [firestore, fetchOrders]);
+  
+  const handleDeleteOrder = async (orderId: string) => {
+    if(!firestore) return;
+    try {
+      await deleteDoc(doc(firestore, 'orders', orderId));
+      toast({ title: 'Success', description: 'Order deleted successfully.' });
+      fetchOrders();
+    } catch (error) {
+      console.error('Error deleting order:', error);
+      toast({ variant: 'destructive', title: 'Error', description: 'Could not delete order.' });
+    }
+  }
 
   const handleStatusChange = async (orderId: string, newStatus: Order['status']) => {
     if (!firestore) return;
@@ -94,13 +117,14 @@ export default function AdminOrdersPage() {
               <TableHead>Items</TableHead>
               <TableHead>Receipt</TableHead>
               <TableHead>Status</TableHead>
+              <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {loading ? (
-              <TableRow><TableCell colSpan={7} className="text-center">Loading orders...</TableCell></TableRow>
+              <TableRow><TableCell colSpan={8} className="text-center">Loading orders...</TableCell></TableRow>
             ) : orders.length === 0 ? (
-                 <TableRow><TableCell colSpan={7} className="text-center">No orders found.</TableCell></TableRow>
+                 <TableRow><TableCell colSpan={8} className="text-center">No orders found.</TableCell></TableRow>
             ) : (
               orders.map(order => (
                 <TableRow key={order.id}>
@@ -140,6 +164,29 @@ export default function AdminOrdersPage() {
                         <SelectItem value="Cancelled">Cancelled</SelectItem>
                       </SelectContent>
                     </Select>
+                  </TableCell>
+                   <TableCell>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button size="sm" variant="destructive">
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This action cannot be undone. This will permanently delete the order.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction onClick={() => handleDeleteOrder(order.id)}>
+                            Continue
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                   </TableCell>
                 </TableRow>
               ))
